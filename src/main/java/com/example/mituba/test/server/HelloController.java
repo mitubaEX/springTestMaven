@@ -14,6 +14,7 @@ import com.mituba.searcher.*;
 @Controller
 public class HelloController {
     private int allTime = 0;
+    private List<String> readList = new ArrayList<>();
 
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public ModelAndView index(ModelAndView mav){
@@ -31,10 +32,10 @@ public class HelloController {
         		System.out.println("jar");
         	else if(file.getOriginalFilename().contains(".class"))
         		System.out.println("class");
-        	new TextReader(br, "2gram", "8982", "69").createSearcherCollecter(br)
+        	new TextReader(br, "2gram", "8982", "69", "0.75").createSearcherCollecter(br)
                 .forEach(n -> onlySearch(n.collectSearcher()));
-        	// mav.addObject("note", String.join("\n", readList));
-        	// mav.addObject("value", String.join("\n", readList));
+        	mav.addObject("note", String.join("\n", readList));
+        	mav.addObject("value", String.join("\n", readList));
         	mav.setViewName("index");
         }catch(Exception e){
 
@@ -44,15 +45,15 @@ public class HelloController {
 
     public void onlySearch(Stream<SearchEngine> stream){
         long start = System.currentTimeMillis();
-        stream.forEach(n -> simCheck(n.runOnlySearch()));
+        stream.forEach(n -> simCheck(n.runOnlySearch("2000")));
         long end = System.currentTimeMillis();
         allTime += (end - start);
         System.out.println(allTime + "ms");
     }
 
-    public void simCheck(List<String[]> sim){
+    public void simCheck(List<String> sim){
         sim.stream()
-            .forEach(n -> System.out.println(n[0] + "," + n[1] + "," + n[2]));
+            .forEach(n -> readList.add(n));
     }
 
     public List<String> readFile(BufferedReader br){

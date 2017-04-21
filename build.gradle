@@ -45,8 +45,9 @@ exclude(module: 'commons-logging')
 
 jar {
     manifest {
-    attributes("Main-Class": "com.example.mituba.test.server.TestServerApplication")
+        attributes("Main-Class": "com.example.mituba.test.server.TestServerApplication")
     }
 
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
 }
+
