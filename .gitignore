@@ -31,4 +31,5 @@ gradle/
 gradlew
 gradlew.bat
 settings.gradle
-
+test.jar
+test.txt
