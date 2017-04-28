@@ -5,10 +5,14 @@
 <title>MITUBA</title>
 </head>
 <body>
-	<form method="post" action="/" enctype="multipart/form-data">
+    <form method="post" action="/" enctype="multipart/form-data">
+        <input type="text" name="name" size="40"/>
 		<input type="file" name="upload" />
-		<input type="submit" value="Upload" />
+        <input type="submit" value="Upload" />
 	</form>
-	<textarea id="note" name="note" cols="40" rows="40" readonly="readonly"><span th:text="*{note}" th:remove="tag"></span></textarea>
+    <textarea id="note" name="note" cols="40" rows="40" readonly="readonly"><span th:text="*{note}" th:remove="tag"></span></textarea>
+    <form method="GET" action="/download">
+        <input type="submit" value="CSVをダウンロード"/>
+    </form>
 </body>
 </html>

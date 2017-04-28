@@ -13,11 +13,11 @@ import java.net.URLEncoder;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
-// import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
+import org.springframework.http.*;
 
 import com.github.pochi.runner.scripts.ScriptRunner;
 import com.github.pochi.runner.scripts.ScriptRunnerBuilder;
@@ -30,14 +30,21 @@ public class HelloController {
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public ModelAndView index(ModelAndView mav){
         mav.setViewName("index");
-        mav.addObject("msg", "お名前を書いて送信してください．");
         return mav;
 	}
+
+    @RequestMapping(value = "/download", method = RequestMethod.GET)
+        public ResponseEntity<byte[]> download() throws IOException {
+            HttpHeaders h = new HttpHeaders();
+            h.add("Content-Type", "text/csv; charset=UTF-8");
+            h.setContentDispositionFormData("filename", "hoge.csv");
+            return new ResponseEntity<>(String.join("\n", searchResult).getBytes("UTF-8"), h, HttpStatus.OK);
+        }
 
 	// jar application/java-archive
 	// class application/octet-stream
     @RequestMapping(value="/", method=RequestMethod.POST)
-    public ModelAndView send(@RequestParam("upload")MultipartFile file, ModelAndView mav){
+    public ModelAndView send(@RequestParam("upload")MultipartFile file, @RequestParam("name")String rows, ModelAndView mav){
     	try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
             List<String[]> readList = new ArrayList<>();
     		if(file.getOriginalFilename().contains(".jar"))
@@ -47,18 +54,20 @@ public class HelloController {
 
             createFile(file);
 
-
-
             ScriptRunnerBuilder builder = new ScriptRunnerBuilder();
             ScriptRunner runner = builder.build();
             String[] arg = { "./extract.js", "./test.jar"};
             runner.runsScript(arg);
 
-            System.out.println("hello!");
+            // System.out.println("hello!");
+            // System.out.println(rows);//何も入力しないと""
+            if(Objects.equals(rows, ""))//何も入力されなかったら，100件検索する．
+                rows = "100";
 
-            readList = readFile(new BufferedReader(new FileReader(new File("./test.txt"))));
-            readList.stream()
-                .forEach(n -> searchPerform("8982", "2gram", "1", n[2], 0.75));
+            // readList = readFile(new BufferedReader(new FileReader(new File("./test.txt"))));
+            // readList.stream()
+            //     .forEach(n -> searchPerform("8982", "2gram", rows, n[2], 0.75));
+        	// mav.addObject("name", "hello");
         	mav.addObject("note", String.join("\n", searchResult));
         	mav.addObject("value", String.join("\n", searchResult));
         	mav.setViewName("index");
@@ -81,10 +90,6 @@ public class HelloController {
         return query;
     }
 
-
-
-
-
     public void searchPerform(String portNum, String kindOfBirthmark, String coreNum, String birthmark, Double threshold){
         try{
             SolrClient server = new HttpSolrClient.Builder("http://localhost:"+portNum+"/solr/birth_"+kindOfBirthmark+""+coreNum).build();
@@ -103,7 +108,6 @@ public class HelloController {
         }
 
     }
-
 
     public List<String[]> readFile(BufferedReader br){
     	return br.lines()

@@ -7,8 +7,10 @@ birthmarks = extractor.extract(source);
 // file.Write(birthmarks);
 // file.close();
 //
-fs.createFile("test.txt");
-fs.writeFile("test.txt", birthmarks);
+// fs.createFile("test.txt");
+// fs.writeFile("test.txt", birthmarks);
+//
+fs.writer("test.txt", birthmarks)
 
 // fs.print(birthmarks);
 //
