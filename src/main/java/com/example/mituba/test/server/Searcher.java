@@ -1,24 +1,16 @@
 package com.example.mituba.test.server;
 
-import org.springframework.stereotype.Controller;
-
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.*;
-import org.springframework.web.multipart.*;
-import java.io.*;
-import java.util.stream.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.client.solrj.impl.XMLResponseParser;
-import org.springframework.http.*;
 
 public class Searcher{
     private String birthmark;
@@ -51,6 +43,7 @@ public class Searcher{
 
     public List<String> searchPerform(){
         try{
+        	List<String> list = new ArrayList<>();
             SolrDocumentList solrDoc = getSolrDocumentList();
             for(SolrDocument doc : solrDoc){
                 // if((float)doc.get("lev") <= threshold)

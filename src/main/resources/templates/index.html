@@ -14,5 +14,9 @@
     <form method="GET" action="/download">
         <input type="submit" value="CSVをダウンロード"/>
     </form>
+    <form method="GET" action="/compare">
+        <input type="submit" value="比較"/>
+    </form>
+    <textarea id="compareResult" name="compareResult" cols="40" rows="40" readonly="readonly"><span th:text="*{compareResult}" th:remove="tag"></span></textarea>
 </body>
 </html>
