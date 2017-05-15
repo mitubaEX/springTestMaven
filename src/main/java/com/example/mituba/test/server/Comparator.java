@@ -9,11 +9,10 @@ import com.github.pochi.runner.scripts.ScriptRunner;
 import com.github.pochi.runner.scripts.ScriptRunnerBuilder;
 
 public class Comparator {
-	public List<String> getCompareResult(List<String> list, String kindOfBirthmark){
+	public void getCompareResult(List<String> list, String kindOfBirthmark, String uploadFile){
 		list.stream()
 			.map(n -> n.split(",",3))
-			.forEach(n -> compare(n[0] ,n[1], n[2], kindOfBirthmark));
-		return null;
+			.forEach(n -> compare(n[0] ,n[1], n[2], kindOfBirthmark, uploadFile));
 	}
 	
 	public void writeFile(String filename, String birthmark, File file) throws IOException{
@@ -35,12 +34,13 @@ public class Comparator {
 		}
 	}
 	
-	public void compare(String filename, String lev, String birthmark, String kindOfBirthmark){
-		createFile(filename, birthmark);
-        ScriptRunnerBuilder builder = new ScriptRunnerBuilder();
-        ScriptRunner runner = builder.build();
-        String[] arg = { "./compare_input_csv_test.js", kindOfBirthmark, "test.txt", filename + ".csv" };
+	public void compare(String filename, String lev, String birthmark, String kindOfBirthmark, String uploadFile){
         try {
+        	System.out.println(uploadFile);
+            createFile(filename, birthmark);
+            ScriptRunnerBuilder builder = new ScriptRunnerBuilder();
+            ScriptRunner runner = builder.build();
+            String[] arg = { "./compare_input_csv_test.js", kindOfBirthmark, uploadFile + ".csv", filename + ".csv" };
 			runner.runsScript(arg);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

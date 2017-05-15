@@ -7,8 +7,8 @@ source2 = fs.open(argv[3]);
 p = extractor.extract(source1);
 q = extractor.extract(source2);
 
-pair2 = bmsys.pairMaker("RoundRobinWithSamePair")
-// pair2 = bmsys.pairMaker("RoundRobin")
+// pair2 = bmsys.pairMaker("RoundRobinWithSamePair")
+pair2 = bmsys.pairMaker("RoundRobin")
 // comparator = bmsys.comparator("JaccardIndex")
 // comparator = bmsys.comparator("DiceIndex")
 comparator = bmsys.comparator("SimpsonIndex")

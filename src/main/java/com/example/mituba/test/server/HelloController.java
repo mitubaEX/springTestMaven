@@ -16,6 +16,7 @@ import org.springframework.http.*;
 public class HelloController {
     List<String> searchResult = new ArrayList<>();
     List<String> compareResult = new ArrayList<>();
+    String uploadFile = "";
 
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public ModelAndView index(ModelAndView mav){
@@ -33,13 +34,21 @@ public class HelloController {
 
 	@RequestMapping(value="/compare", method=RequestMethod.GET)
 	public ModelAndView compare(ModelAndView mav){
-        List<String> tmpList = new ArrayList<>();
-        tmpList.add("a,b,9 179 177 25 180,179 177 25 180 180,177 25 180 180 182,25 180 180 182 54,180 180 182 54 25,180 182 54 25 4,182 54 25 4 182,54 25 4 182 25,25 4 182 25 187,4 182 25 187 89,182 25 187 89 25,25 187 89 25 180,187 89 25 180 180,89 25 180 180 182,180 180 182 54 21,180 182 54 21 184,182 54 21 184 183,54 21 184 183 182,21 184 183 182 25,184 183 182 25 187,183 182 25 187 89,187 89 25 180 58,89 25 180 58 25,25 180 58 25 180,180 58 25 180 182,58 25 180 182 25,25 180 182 25 182,180 182 25 182 182,182 25 182 182 184,25 182 182 184 21,182 182 184 21 182,182 184 21 182 183,184 21 182 183 182,21 182 183 182 177,182 183 182 177 25,183 182 177 25 25,182 177 25 25 192,177 25 25 192 182,25 25 192 182 178,25 192 182 178 176,192 182 178 176 25,182 178 176 25 199,178 176 25 199 187,176 25 199 187 89,25 199 187 89 183,199 187 89 183 191,187 89 183 191 25,89 183 191 25 25,183 191 25 25 181,191 25 25 181 25,25 25 181 25 183,25 181 25 183 177");
-        new Comparator().getCompareResult(tmpList, "2-gram");
+//        List<String> tmpList = new ArrayList<>();
+//        tmpList.add("a,b,9 179 177 25 180,179 177 25 180 180,177 25 180 180 182,25 180 180 182 54,180 180 182 54 25,180 182 54 25 4,182 54 25 4 182,54 25 4 182 25,25 4 182 25 187,4 182 25 187 89,182 25 187 89 25,25 187 89 25 180,187 89 25 180 180,89 25 180 180 182,180 180 182 54 21,180 182 54 21 184,182 54 21 184 183,54 21 184 183 182,21 184 183 182 25,184 183 182 25 187,183 182 25 187 89,187 89 25 180 58,89 25 180 58 25,25 180 58 25 180,180 58 25 180 182,58 25 180 182 25,25 180 182 25 182,180 182 25 182 182,182 25 182 182 184,25 182 182 184 21,182 182 184 21 182,182 184 21 182 183,184 21 182 183 182,21 182 183 182 177,182 183 182 177 25,183 182 177 25 25,182 177 25 25 192,177 25 25 192 182,25 25 192 182 178,25 192 182 178 176,192 182 178 176 25,182 178 176 25 199,178 176 25 199 187,176 25 199 187 89,25 199 187 89 183,199 187 89 183 191,187 89 183 191 25,89 183 191 25 25,183 191 25 25 181,191 25 25 181 25,25 25 181 25 183,25 181 25 183 177");
+        new Comparator().getCompareResult(searchResult, "2-gram", uploadFile);
         mav.setViewName("index");
-        mav.addObject("compareResult", "world");
+        mav.addObject("compareResult", String.join("\n", compareResult));
         return mav;
 	}
+	
+    public List<Searcher> readFile(BufferedReader br, String rows){
+    	return br.lines()
+            .map(n -> n.split(",",3))
+            .filter(n -> n.length >= 3)
+            .map(n -> new Searcher(n[2],"8982", "2gram", rows, 0.25))
+            .collect(Collectors.toList());
+    }
     
 	// jar application/java-archive
 	// class application/octet-stream
@@ -53,26 +62,19 @@ public class HelloController {
         		System.out.println("class");
 
             new Extractor().createExtractFile(file);
+            uploadFile = file.getOriginalFilename();
 
             if(Objects.equals(rows, ""))//何も入力されなかったら，100件検索する．
                 rows = "100";
 
-//            readFile(new BufferedReader(new FileReader(new File("./test.txt"))), rows).stream()
-//                .forEach(n -> n.searchPerform().forEach(m -> searchResult.add(m)));
-        	mav.addObject("note", String.join("\n", searchResult));
-        	mav.addObject("value", String.join("\n", searchResult));
+            readFile(new BufferedReader(new FileReader(new File(file.getOriginalFilename() + ".csv"))), rows).stream()
+                .forEach(n -> n.searchPerform().forEach(m -> searchResult.add(m)));
         	mav.setViewName("index");
+        	mav.addObject("note", String.join("\n", searchResult));
+            return mav;
+//        	mav.addObject("value", String.join("\n", searchResult));
         }catch(Exception e){
-
+            return mav;
         }
-        return mav;
-    }
-
-    public List<Searcher> readFile(BufferedReader br, String rows){
-    	return br.lines()
-            .map(n -> n.split(",",3))
-            .filter(n -> n.length >= 3)
-            .map(n -> new Searcher(n[2],"8982", "2gram", rows, 0.75))
-            .collect(Collectors.toList());
     }
 }

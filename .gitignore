@@ -34,4 +34,5 @@ settings.gradle
 test.jar
 test.txt
 *.csv
-
+*.class
+*.jar
