@@ -25,19 +25,21 @@ public class HelloController {
 	}
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> download() throws IOException {
+    public ResponseEntity<byte[]> download(@RequestParam("searchResult")String searchResultOfClient) throws IOException {
         HttpHeaders h = new HttpHeaders();
         h.add("Content-Type", "text/csv; charset=UTF-8");
         h.setContentDispositionFormData("filename", "hoge.csv");
-        return new ResponseEntity<>(String.join("\n", searchResult).getBytes("UTF-8"), h, HttpStatus.OK);
+        return new ResponseEntity<>(searchResultOfClient.getBytes("UTF-8"), h, HttpStatus.OK);
     }
 
-	@RequestMapping(value="/compare", method=RequestMethod.GET)
-	public ModelAndView compare(ModelAndView mav){
+	@RequestMapping(value="/compare", method=RequestMethod.POST)
+	public ModelAndView compare(@RequestParam("searchResult")String searchResultOfClient, ModelAndView mav){
 //        List<String> tmpList = new ArrayList<>();
 //        tmpList.add("a,b,9 179 177 25 180,179 177 25 180 180,177 25 180 180 182,25 180 180 182 54,180 180 182 54 25,180 182 54 25 4,182 54 25 4 182,54 25 4 182 25,25 4 182 25 187,4 182 25 187 89,182 25 187 89 25,25 187 89 25 180,187 89 25 180 180,89 25 180 180 182,180 180 182 54 21,180 182 54 21 184,182 54 21 184 183,54 21 184 183 182,21 184 183 182 25,184 183 182 25 187,183 182 25 187 89,187 89 25 180 58,89 25 180 58 25,25 180 58 25 180,180 58 25 180 182,58 25 180 182 25,25 180 182 25 182,180 182 25 182 182,182 25 182 182 184,25 182 182 184 21,182 182 184 21 182,182 184 21 182 183,184 21 182 183 182,21 182 183 182 177,182 183 182 177 25,183 182 177 25 25,182 177 25 25 192,177 25 25 192 182,25 25 192 182 178,25 192 182 178 176,192 182 178 176 25,182 178 176 25 199,178 176 25 199 187,176 25 199 187 89,25 199 187 89 183,199 187 89 183 191,187 89 183 191 25,89 183 191 25 25,183 191 25 25 181,191 25 25 181 25,25 25 181 25 183,25 181 25 183 177");
-        new Comparator().getCompareResult(searchResult, "2-gram", uploadFile);
+        new Comparator().getCompareResult(Arrays.asList(searchResultOfClient.split("\n")), "2-gram", uploadFile);
         mav.setViewName("index");
+        mav.addObject("searchResult", searchResultOfClient);
+        mav.addObject("note", searchResultOfClient);
         mav.addObject("compareResult", String.join("\n", compareResult));
         return mav;
 	}
@@ -53,13 +55,15 @@ public class HelloController {
 	// jar application/java-archive
 	// class application/octet-stream
     @RequestMapping(value="/", method=RequestMethod.POST)
-    public ModelAndView send(@RequestParam("upload")MultipartFile file, @RequestParam("name")String rows, ModelAndView mav){
+    public ModelAndView send(@RequestParam("upload")MultipartFile file, @RequestParam("name")String rows, @RequestParam("searchResult")String searchResultOfClient,  ModelAndView mav){
     	try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
 //            List<String[]> readList = new ArrayList<>();
+            List<String> searchResult = new ArrayList<>();
     		if(file.getOriginalFilename().contains(".jar"))
         		System.out.println("jar");
         	else if(file.getOriginalFilename().contains(".class"))
         		System.out.println("class");
+    		System.out.println(searchResultOfClient);
 
             new Extractor().createExtractFile(file);
             uploadFile = file.getOriginalFilename();
@@ -71,6 +75,7 @@ public class HelloController {
                 .forEach(n -> n.searchPerform().forEach(m -> searchResult.add(m)));
         	mav.setViewName("index");
         	mav.addObject("note", String.join("\n", searchResult));
+        	mav.addObject("searchResult", String.join("\n", searchResult));
             return mav;
 //        	mav.addObject("value", String.join("\n", searchResult));
         }catch(Exception e){

@@ -8,13 +8,16 @@
     <form method="post" action="/" enctype="multipart/form-data">
         <input type="text" name="name" size="40"/>
 		<input type="file" name="upload" />
+        <input type="hidden" name="searchResult" th:value="${searchResult}"/>
         <input type="submit" value="Upload" />
 	</form>
     <textarea id="note" name="note" cols="40" rows="40" readonly="readonly"><span th:text="*{note}" th:remove="tag"></span></textarea>
     <form method="GET" action="/download">
+        <input type="hidden" name="searchResult" th:value="${searchResult}"/>
         <input type="submit" value="CSVをダウンロード"/>
     </form>
-    <form method="GET" action="/compare">
+    <form method="POST" action="/compare">
+        <input type="hidden" name="searchResult" th:value="${searchResult}"/>
         <input type="submit" value="比較"/>
     </form>
     <textarea id="compareResult" name="compareResult" cols="40" rows="40" readonly="readonly"><span th:text="*{compareResult}" th:remove="tag"></span></textarea>
