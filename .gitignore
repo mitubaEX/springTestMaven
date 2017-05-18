@@ -36,3 +36,6 @@ test.txt
 *.csv
 *.class
 *.jar
+test
+test$'\n'test$'\n'test$'\n'test$'\n'test$'\n'test$'\n'test$'\n'test$'\n'test$'\n'test$'\n'test
+
