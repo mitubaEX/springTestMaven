@@ -33,14 +33,17 @@ public class HelloController {
     }
 
 	@RequestMapping(value="/compare", method=RequestMethod.POST)
-	public ModelAndView compare(@RequestParam("searchResult")String searchResultOfClient, ModelAndView mav){
-//        List<String> tmpList = new ArrayList<>();
-//        tmpList.add("a,b,9 179 177 25 180,179 177 25 180 180,177 25 180 180 182,25 180 180 182 54,180 180 182 54 25,180 182 54 25 4,182 54 25 4 182,54 25 4 182 25,25 4 182 25 187,4 182 25 187 89,182 25 187 89 25,25 187 89 25 180,187 89 25 180 180,89 25 180 180 182,180 180 182 54 21,180 182 54 21 184,182 54 21 184 183,54 21 184 183 182,21 184 183 182 25,184 183 182 25 187,183 182 25 187 89,187 89 25 180 58,89 25 180 58 25,25 180 58 25 180,180 58 25 180 182,58 25 180 182 25,25 180 182 25 182,180 182 25 182 182,182 25 182 182 184,25 182 182 184 21,182 182 184 21 182,182 184 21 182 183,184 21 182 183 182,21 182 183 182 177,182 183 182 177 25,183 182 177 25 25,182 177 25 25 192,177 25 25 192 182,25 25 192 182 178,25 192 182 178 176,192 182 178 176 25,182 178 176 25 199,178 176 25 199 187,176 25 199 187 89,25 199 187 89 183,199 187 89 183 191,187 89 183 191 25,89 183 191 25 25,183 191 25 25 181,191 25 25 181 25,25 25 181 25 183,25 181 25 183 177");
-        new Comparator().getCompareResult(Arrays.asList(searchResultOfClient.split("\n")), "2-gram", uploadFile);
+	public ModelAndView compare(@RequestParam("searchResult")String searchResultOfClient,@RequestParam("uploadFile")String uploadFileOfClient,  ModelAndView mav){
+        new Comparator().getCompareResult(Arrays.asList(searchResultOfClient.split("\n")), "2-gram", uploadFileOfClient);
         mav.setViewName("index");
         mav.addObject("searchResult", searchResultOfClient);
         mav.addObject("note", searchResultOfClient);
+        mav.addObject("uploadFile", uploadFileOfClient);
         mav.addObject("compareResult", String.join("\n", compareResult));
+        mav.addObject("searchResult_js", searchResultOfClient);
+        mav.addObject("note_js", searchResultOfClient);
+        mav.addObject("uploadFile_js", uploadFileOfClient);
+        mav.addObject("compareResult_js", String.join("\n", compareResult));
         return mav;
 	}
 	
@@ -63,7 +66,6 @@ public class HelloController {
         		System.out.println("jar");
         	else if(file.getOriginalFilename().contains(".class"))
         		System.out.println("class");
-    		System.out.println(searchResultOfClient);
 
             new Extractor().createExtractFile(file);
             uploadFile = file.getOriginalFilename();
@@ -75,7 +77,11 @@ public class HelloController {
                 .forEach(n -> n.searchPerform().forEach(m -> searchResult.add(m)));
         	mav.setViewName("index");
         	mav.addObject("note", String.join("\n", searchResult));
+        	mav.addObject("uploadFile", uploadFile);
         	mav.addObject("searchResult", String.join("\n", searchResult));
+        	mav.addObject("note_js", String.join("\n", searchResult));
+        	mav.addObject("uploadFile_js", uploadFile);
+        	mav.addObject("searchResult_js", String.join("\n", searchResult));
             return mav;
 //        	mav.addObject("value", String.join("\n", searchResult));
         }catch(Exception e){

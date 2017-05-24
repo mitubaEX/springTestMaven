@@ -39,3 +39,7 @@ test.txt
 ./test
 ./test$'\n'test$'\n'test$'\n'test$'\n'test$'\n'test$'\n'test$'\n'test$'\n'test$'\n'test$'\n'test
 
+.DS_Store
+src/main/resources/.DS_Store
+src/main/resources/templates/store.legacy.min.js
+test

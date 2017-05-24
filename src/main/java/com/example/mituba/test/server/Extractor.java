@@ -35,14 +35,12 @@ public class Extractor{
         return file.getOriginalFilename();
     }
 
-    public boolean createExtractFile(MultipartFile file){
+    public void createExtractFile(MultipartFile file){
         try {
 			extractBirthmark(createOriginalFile(file));
-			return true;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
 		}
     }
 }

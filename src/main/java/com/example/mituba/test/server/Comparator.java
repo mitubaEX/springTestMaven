@@ -12,6 +12,7 @@ public class Comparator {
 	public void getCompareResult(List<String> list, String kindOfBirthmark, String uploadFile){
 		list.stream()
 			.map(n -> n.split(",",3))
+			.filter(n -> n.length >= 3)
 			.forEach(n -> compare(n[0] ,n[1], n[2], kindOfBirthmark, uploadFile));
 	}
 	
@@ -36,7 +37,6 @@ public class Comparator {
 	
 	public void compare(String filename, String lev, String birthmark, String kindOfBirthmark, String uploadFile){
         try {
-        	System.out.println(uploadFile);
             createFile(filename, birthmark);
             ScriptRunnerBuilder builder = new ScriptRunnerBuilder();
             ScriptRunner runner = builder.build();

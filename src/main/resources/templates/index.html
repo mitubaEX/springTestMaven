@@ -1,23 +1,64 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+
  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type="text/javascript">
+      function load()
+      {
+        document.getElementById('uploadFile').textContent = localStorage.getItem('uploadFile');
+        document.getElementById('searchResult').textContent = localStorage.getItem('searchResult');
+        document.getElementById('note').textContent = localStorage.getItem('note');
+        document.getElementById('compareResult').textContent = localStorage.getItem('compareResult');
+        document.getElementById('uploadFile').value = localStorage.getItem('uploadFile');
+        document.getElementById('searchResult').value = localStorage.getItem('searchResult');
+        document.getElementById('note').value = localStorage.getItem('note');
+        document.getElementById('compareResult').value = localStorage.getItem('compareResult');
+    }
+    </script>
+    <script th:inline="javascript">
+        var flag = false;
+        function insert(){
+            var uploadFile = localStorage.getItem('uploadFile');
+            var searchResult = localStorage.getItem('searchResult');
+            var note = localStorage.getItem('note');
+            var compareResult = localStorage.getItem('compareResult');
+            var tmp = "he"
+            tmp = /*[[${searchResult_js}]]*/ "he";
+            if(!tmp){
+                load();
+                return;
+            }
+                        /*<![CDATA[*/
+            if(searchResult.lastIndexOf(",") != tmp.lastIndexOf(",")){
+                localStorage.setItem('uploadFile', /*[[${uploadFile_js}]]*/ uploadFile);
+                localStorage.setItem('searchResult', /*[[${searchResult_js}]]*/ searchResult);
+                localStorage.setItem('note', /*[[${note_js}]]*/ note);
+                localStorage.setItem('compareResult', /*[[${compareResult_js}]]*/ compareResult);
+            }
+                    /*]]>*/
+            load()
+        }
+    </script>
 <title>MITUBA</title>
 </head>
-<body>
+<body onload="insert()">
     <form method="post" action="/" enctype="multipart/form-data">
         <input type="text" name="name" size="40"/>
-		<input type="file" name="upload" />
-        <input type="hidden" name="searchResult" th:value="${searchResult}"/>
-        <input type="submit" value="Upload" />
+		<input type="file" id="upload" name="upload" />
+        <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
+        <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
+        <input type="submit" value="検索" />
 	</form>
     <textarea id="note" name="note" cols="40" rows="40" readonly="readonly"><span th:text="*{note}" th:remove="tag"></span></textarea>
     <form method="GET" action="/download">
-        <input type="hidden" name="searchResult" th:value="${searchResult}"/>
+        <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
+        <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
         <input type="submit" value="CSVをダウンロード"/>
     </form>
     <form method="POST" action="/compare">
-        <input type="hidden" name="searchResult" th:value="${searchResult}"/>
+        <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
+        <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
         <input type="submit" value="比較"/>
     </form>
     <textarea id="compareResult" name="compareResult" cols="40" rows="40" readonly="readonly"><span th:text="*{compareResult}" th:remove="tag"></span></textarea>
