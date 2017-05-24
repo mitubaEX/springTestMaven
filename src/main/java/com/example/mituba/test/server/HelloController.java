@@ -28,13 +28,27 @@ public class HelloController {
     public ResponseEntity<byte[]> download(@RequestParam("searchResult")String searchResultOfClient) throws IOException {
         HttpHeaders h = new HttpHeaders();
         h.add("Content-Type", "text/csv; charset=UTF-8");
-        h.setContentDispositionFormData("filename", "hoge.csv");
+        h.setContentDispositionFormData("filename", "searchResult.csv");
         return new ResponseEntity<>(searchResultOfClient.getBytes("UTF-8"), h, HttpStatus.OK);
+    }
+    public String readFileOfCompareResult(String str){
+    	try {
+			List<String> list =  new BufferedReader(new FileReader(new File(str))).lines().collect(Collectors.toList());
+			return String.join(",", list);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
     }
 
 	@RequestMapping(value="/compare", method=RequestMethod.POST)
 	public ModelAndView compare(@RequestParam("searchResult")String searchResultOfClient,@RequestParam("uploadFile")String uploadFileOfClient,  ModelAndView mav){
-        new Comparator().getCompareResult(Arrays.asList(searchResultOfClient.split("\n")), "2-gram", uploadFileOfClient);
+        List<String> list = new Comparator().getCompareResult(Arrays.asList(searchResultOfClient.split("\n")), "2-gram", uploadFileOfClient);
+        compareResult = list.stream()
+        		.distinct()
+				.map(n -> readFileOfCompareResult(n))
+				.collect(Collectors.toList());
         mav.setViewName("index");
         mav.addObject("searchResult", searchResultOfClient);
         mav.addObject("note", searchResultOfClient);
@@ -74,7 +88,11 @@ public class HelloController {
                 rows = "100";
 
             readFile(new BufferedReader(new FileReader(new File(file.getOriginalFilename() + ".csv"))), rows).stream()
-                .forEach(n -> n.searchPerform().forEach(m -> searchResult.add(m)));
+                .forEach(n -> n.searchPerform()
+                		.stream()
+                		.distinct()
+                		.forEach(m -> searchResult.add(m))
+                		);
         	mav.setViewName("index");
         	mav.addObject("note", String.join("\n", searchResult));
         	mav.addObject("uploadFile", uploadFile);
@@ -82,6 +100,8 @@ public class HelloController {
         	mav.addObject("note_js", String.join("\n", searchResult));
         	mav.addObject("uploadFile_js", uploadFile);
         	mav.addObject("searchResult_js", String.join("\n", searchResult));
+			mav.addObject("compareResult", String.join("\n", compareResult));
+			mav.addObject("compareResult_js", String.join("\n", compareResult));
             return mav;
 //        	mav.addObject("value", String.join("\n", searchResult));
         }catch(Exception e){
