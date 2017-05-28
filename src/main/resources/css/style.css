@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+
+#layout01 {
+  width: 300px; /* 幅 */
+  height: 200px;  /* 高さ */
+  float: left;  /* 回り込み */
+}
+
+#layout02 {
+  width: 300px; /* 幅 */
+  height: 200px;  /* 高さ */
+  float: left;  /* 回り込み */
+}

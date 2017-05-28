@@ -31,6 +31,15 @@ public class HelloController {
         h.setContentDispositionFormData("filename", "searchResult.csv");
         return new ResponseEntity<>(searchResultOfClient.getBytes("UTF-8"), h, HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/downloadCompareResult", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> downloadCompareResult(@RequestParam("compareResult")String compareResultOfClient) throws IOException {
+        HttpHeaders h = new HttpHeaders();
+        h.add("Content-Type", "text/csv; charset=UTF-8");
+        h.setContentDispositionFormData("filename", "compareResult.csv");
+        return new ResponseEntity<>(compareResultOfClient.getBytes("UTF-8"), h, HttpStatus.OK);
+    }
+    
     public String readFileOfCompareResult(String str){
     	try {
 			List<String> list =  new BufferedReader(new FileReader(new File(str))).lines().collect(Collectors.toList());
