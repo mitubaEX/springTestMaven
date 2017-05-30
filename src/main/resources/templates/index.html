@@ -41,8 +41,7 @@
         }
     </script>
 <title>MITUBA</title>
-<spring:url value="/resources/core/css/style.css" var="coreCss"/>
-<link href="${coreCss}" rel="stylesheet" />
+<link href="css/style.css" th:href="@{css/style.css}" rel="stylesheet"></link>
 </head>
 <body onload="insert()">
     <form method="post" action="/" enctype="multipart/form-data">
@@ -52,23 +51,34 @@
         <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
         <input type="submit" value="検索" />
 	</form>
-    <textarea id="note" name="note" cols="40" rows="40" readonly="readonly"><span th:text="*{note}" th:remove="tag"></span></textarea>
+    <div id="layout01">
+    <!-- <textarea id="note" name="note" cols="40" rows="40" readonly="readonly"><span th:text="*{note}" th:remove="tag"></span></textarea> -->
+
+        <table border="1">
+        <tr th:each="searchResult : ${searchResultList}">
+            <td th:text="${searchResult.filename}">111</td>
+            <td th:text="${searchResult.risk}">Yumi Wakatsuki</td>
+        </tr>
+        </table>
     <form method="GET" action="/download">
-        <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
-        <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
-        <input type="submit" value="検索結果をダウンロード"/>
+    <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
+    <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
+    <input type="submit" value="検索結果をダウンロード"/>
     </form>
+    </div>
+    <div id="layout02">
     <form method="POST" action="/compare">
-        <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
-        <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
-        <input type="submit" value="比較"/>
+    <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
+    <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
+    <input type="submit" value="比較"/>
     </form>
     <textarea id="compareResult" name="compareResult" cols="40" rows="40" readonly="readonly"><span th:text="*{compareResult}" th:remove="tag"></span></textarea>
     <form method="GET" action="/downloadCompareResult">
-        <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
-        <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
-        <input type="hidden" id="compareResult" name="compareResult" th:value="${compareResult}"/>
-        <input type="submit" value="比較結果をダウンロード"/>
+    <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
+    <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
+    <input type="hidden" id="compareResult" name="compareResult" th:value="${compareResult}"/>
+    <input type="submit" value="比較結果をダウンロード"/>
     </form>
+    </div>
 </body>
 </html>

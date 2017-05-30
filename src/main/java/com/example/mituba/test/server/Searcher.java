@@ -24,7 +24,7 @@ public class Searcher{
         this.threshold = threshold;
     }
 
-    
+
     public Process getCurlProcess(){
         try {
             return Runtime.getRuntime().exec("curl http://localhost:"+portNum+"/solr/" + kindOfBirthmark + "/query"
@@ -52,7 +52,7 @@ public class Searcher{
         	new BufferedReader(new InputStreamReader(getCurlProcess().getInputStream())).lines()
         			.map(n -> n.split(",",3))
                     .filter(i -> i.length >= 3  && !Objects.equals(i[1], "lev"))
-                    .forEach(n -> list.add(n[0] + "," + n[1] + n[2]));
+                    .forEach(n -> list.add(n[0] + "," + n[1] + "," + n[2]));
             return list;
         }catch(Exception e){
             System.out.println(e + ":solrj");

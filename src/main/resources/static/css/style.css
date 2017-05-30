@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+
+#layout01 {
+  float: left;  /* 回り込み */
+}
+
+#layout02 {
+  float: right;  /* 回り込み */
+}

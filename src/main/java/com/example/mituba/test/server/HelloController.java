@@ -31,7 +31,7 @@ public class HelloController {
         h.setContentDispositionFormData("filename", "searchResult.csv");
         return new ResponseEntity<>(searchResultOfClient.getBytes("UTF-8"), h, HttpStatus.OK);
     }
-    
+
     @RequestMapping(value = "/downloadCompareResult", method = RequestMethod.GET)
     public ResponseEntity<byte[]> downloadCompareResult(@RequestParam("compareResult")String compareResultOfClient) throws IOException {
         HttpHeaders h = new HttpHeaders();
@@ -39,7 +39,7 @@ public class HelloController {
         h.setContentDispositionFormData("filename", "compareResult.csv");
         return new ResponseEntity<>(compareResultOfClient.getBytes("UTF-8"), h, HttpStatus.OK);
     }
-    
+
     public String readFileOfCompareResult(String str){
     	try {
 			List<String> list =  new BufferedReader(new FileReader(new File(str))).lines().collect(Collectors.toList());
@@ -69,7 +69,7 @@ public class HelloController {
         mav.addObject("compareResult_js", String.join("\n", compareResult));
         return mav;
 	}
-	
+
     public List<Searcher> readFile(BufferedReader br, String rows){
     	return br.lines()
             .map(n -> n.split(",",3))
@@ -77,7 +77,7 @@ public class HelloController {
             .map(n -> new Searcher(n[2],"8982", "2gram", rows, 0.25))
             .collect(Collectors.toList());
     }
-    
+
 	// jar application/java-archive
 	// class application/octet-stream
     @RequestMapping(value="/", method=RequestMethod.POST)
@@ -85,6 +85,7 @@ public class HelloController {
     	try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
 //            List<String[]> readList = new ArrayList<>();
             List<String> searchResult = new ArrayList<>();
+            List<SearchResult> searchResultList = new ArrayList<>();
     		if(file.getOriginalFilename().contains(".jar"))
         		System.out.println("jar");
         	else if(file.getOriginalFilename().contains(".class"))
@@ -96,21 +97,26 @@ public class HelloController {
             if(Objects.equals(rows, ""))//何も入力されなかったら，100件検索する．
                 rows = "100";
 
+
             readFile(new BufferedReader(new FileReader(new File(file.getOriginalFilename() + ".csv"))), rows).stream()
                 .forEach(n -> n.searchPerform()
                 		.stream()
                 		.distinct()
                 		.forEach(m -> searchResult.add(m))
                 		);
+            searchResult.stream()
+                .map(i -> i.split(","))
+                .forEach(i -> searchResultList.add(new SearchResult(i[0], Double.parseDouble(i[1]))));
         	mav.setViewName("index");
         	mav.addObject("note", String.join("\n", searchResult));
         	mav.addObject("uploadFile", uploadFile);
         	mav.addObject("searchResult", String.join("\n", searchResult));
-        	mav.addObject("note_js", String.join("\n", searchResult));
-        	mav.addObject("uploadFile_js", uploadFile);
-        	mav.addObject("searchResult_js", String.join("\n", searchResult));
+        	mav.addObject("searchResultList", searchResultList);
+   //      	mav.addObject("note_js", String.join("\n", searchResult));
+   //      	mav.addObject("uploadFile_js", uploadFile);
+   //      	mav.addObject("searchResult_js", String.join("\n", searchResult));
 			mav.addObject("compareResult", String.join("\n", compareResult));
-			mav.addObject("compareResult_js", String.join("\n", compareResult));
+			// mav.addObject("compareResult_js", String.join("\n", compareResult));
             return mav;
 //        	mav.addObject("value", String.join("\n", searchResult));
         }catch(Exception e){
