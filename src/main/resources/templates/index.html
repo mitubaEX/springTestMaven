@@ -9,11 +9,12 @@
         document.getElementById('uploadFile').textContent = localStorage.getItem('uploadFile');
         document.getElementById('searchResult').textContent = localStorage.getItem('searchResult');
         document.getElementById('note').textContent = localStorage.getItem('note');
-        document.getElementById('compareResult').textContent = localStorage.getItem('compareResult');
+        <!-- document.getElementById('compareResult').textContent = localStorage.getItem('compareResult'); -->
+
         document.getElementById('uploadFile').value = localStorage.getItem('uploadFile');
         document.getElementById('searchResult').value = localStorage.getItem('searchResult');
         document.getElementById('note').value = localStorage.getItem('note');
-        document.getElementById('compareResult').value = localStorage.getItem('compareResult');
+        <!-- document.getElementById('compareResult').value = localStorage.getItem('compareResult'); -->
     }
     </script>
     <script th:inline="javascript">
@@ -23,6 +24,7 @@
             var searchResult = localStorage.getItem('searchResult');
             var note = localStorage.getItem('note');
             var compareResult = localStorage.getItem('compareResult');
+            <!-- var searchResultList_js = localStorage.getItem('tmp'); -->
             var tmp = "he"
             tmp = /*[[${searchResult_js}]]*/ "he";
             if(!tmp){
@@ -35,15 +37,17 @@
                 localStorage.setItem('searchResult', /*[[${searchResult_js}]]*/ searchResult);
                 localStorage.setItem('note', /*[[${note_js}]]*/ note);
                 localStorage.setItem('compareResult', /*[[${compareResult_js}]]*/ compareResult);
+                <!-- localStorage.setItem('tmp', /*[[${searchResultList}]]*/ searchResultList_js); -->
             }
                     /*]]>*/
-            load()
+            load();
         }
     </script>
 <title>MITUBA</title>
 <link href="css/style.css" th:href="@{css/style.css}" rel="stylesheet"></link>
 </head>
 <body onload="insert()">
+<!-- <body> -->
     <form method="post" action="/" enctype="multipart/form-data">
         <input type="text" name="name" size="40"/>
 		<input type="file" id="upload" name="upload" />
@@ -51,34 +55,48 @@
         <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
         <input type="submit" value="検索" />
 	</form>
-    <div id="layout01">
-    <!-- <textarea id="note" name="note" cols="40" rows="40" readonly="readonly"><span th:text="*{note}" th:remove="tag"></span></textarea> -->
+    <!-- <div id="layout01"> -->
+    <textarea id="note" name="note" cols="40" rows="40" readonly="readonly" style="display:none;"><span th:text="*{note}" th:remove="tag"></span></textarea>
+    <textarea id="searchResult" name="searchResult" cols="40" rows="40" readonly="readonly" style="display:none;"><span th:text="*{searchResult}" th:remove="tag"></span></textarea>
 
+    <div style="height:200px; width:1000px; overflow-y:scroll;">
         <table border="1">
         <tr th:each="searchResult : ${searchResultList}">
             <td th:text="${searchResult.filename}">111</td>
             <td th:text="${searchResult.risk}">Yumi Wakatsuki</td>
         </tr>
         </table>
-    <form method="GET" action="/download">
-    <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
-    <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
-    <input type="submit" value="検索結果をダウンロード"/>
-    </form>
     </div>
-    <div id="layout02">
+    <!-- <form method="GET" action="/download">                                                      -->
+    <!--     <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/> -->
+    <!--     <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>       -->
+    <!--     <input type="submit" value="検索結果をダウンロード"/>                        -->
+    <!-- </form>                                                                                     -->
+
+    <!-- </div> -->
+
+    <!-- <div id="layout02"> -->
     <form method="POST" action="/compare">
     <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
     <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
-    <input type="submit" value="比較"/>
+    <input type="submit" value="詳細に危険度を測定"/>
     </form>
-    <textarea id="compareResult" name="compareResult" cols="40" rows="40" readonly="readonly"><span th:text="*{compareResult}" th:remove="tag"></span></textarea>
-    <form method="GET" action="/downloadCompareResult">
-    <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
-    <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
-    <input type="hidden" id="compareResult" name="compareResult" th:value="${compareResult}"/>
-    <input type="submit" value="比較結果をダウンロード"/>
-    </form>
+    <!-- <textarea id="compareResult" name="compareResult" cols="40" rows="40" readonly="readonly"><span th:text="*{compareResult}" th:remove="tag"></span></textarea> -->
+    <div style="height:200px; width:1000px; overflow-y:scroll;">
+        <table border="1">
+        <tr th:each="compareResult : ${compareResultList}">
+            <td th:text="${compareResult.filename}">111</td>
+            <td th:text="${compareResult.risk}">Yumi Wakatsuki</td>
+        </tr>
+        </table>
     </div>
+
+    <!-- <form method="GET" action="/downloadCompareResult">                                        -->
+    <!-- <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>    -->
+    <!-- <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>          -->
+    <!-- <input type="hidden" id="compareResult" name="compareResult" th:value="${compareResult}"/> -->
+    <!-- <input type="submit" value="比較結果をダウンロード"/>                           -->
+    <!-- </form>                                                                                    -->
+    <!-- </div> -->
 </body>
 </html>

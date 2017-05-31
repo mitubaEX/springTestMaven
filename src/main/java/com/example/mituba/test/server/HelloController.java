@@ -19,8 +19,21 @@ public class HelloController {
     String uploadFile = "";
 
 	@RequestMapping(value="/", method=RequestMethod.GET)
+	// public ModelAndView index(@RequestParam("searchResult")String searchResultOfClient, @RequestParam("compareResult")String compareResultOfClient, @RequestParam("uploadFile")String uploadFileOfClient, ModelAndView mav){
 	public ModelAndView index(ModelAndView mav){
+    //     List<SearchResult> searchResultList = Arrays.stream(searchResultOfClient.split("\n"))
+    //             .map(i -> i.split(","))
+    //             .map(i -> new SearchResult(i[0], Double.parseDouble(i[1])))
+				// .collect(Collectors.toList());
+    //
+    //     List<CompareResult> compareResultList = Arrays.stream(compareResultOfClient.split("\n"))
+    //             .map(i -> i.split(","))
+    //             .map(i -> new CompareResult(i[0], Double.parseDouble(i[1])))
+				// .collect(Collectors.toList());
+
         mav.setViewName("index");
+        // mav.addObject("searchResultList", searchResultList);
+        // mav.addObject("compareResultList", compareResultList);
         return mav;
 	}
 
@@ -54,15 +67,34 @@ public class HelloController {
 	@RequestMapping(value="/compare", method=RequestMethod.POST)
 	public ModelAndView compare(@RequestParam("searchResult")String searchResultOfClient,@RequestParam("uploadFile")String uploadFileOfClient,  ModelAndView mav){
         List<String> list = new Comparator().getCompareResult(Arrays.asList(searchResultOfClient.split("\n")), "2-gram", uploadFileOfClient);
+
+        List<SearchResult> searchResultList = new ArrayList<>();
+        Arrays.stream(searchResultOfClient.split("\n"))
+                .map(i -> i.split(","))
+                .forEach(i -> searchResultList.add(new SearchResult(i[0], Double.parseDouble(i[1]))));
+
         compareResult = list.stream()
         		.distinct()
 				.map(n -> readFileOfCompareResult(n))
 				.collect(Collectors.toList());
+
+        List<CompareResult> compareResultList = list.stream()
+            .distinct()
+            .map(n -> readFileOfCompareResult(n))
+            .map(n -> n.split(","))
+            .map(n -> new CompareResult(n[1], Double.parseDouble(n[2])))
+            .sorted((CompareResult1, CompareResult2) -> CompareResult2.riskNum.compareTo(CompareResult1.riskNum))
+            .collect(Collectors.toList());
+
         mav.setViewName("index");
         mav.addObject("searchResult", searchResultOfClient);
         mav.addObject("note", searchResultOfClient);
         mav.addObject("uploadFile", uploadFileOfClient);
         mav.addObject("compareResult", String.join("\n", compareResult));
+
+        mav.addObject("searchResultList", searchResultList);
+        mav.addObject("compareResultList", compareResultList);
+
         mav.addObject("searchResult_js", searchResultOfClient);
         mav.addObject("note_js", searchResultOfClient);
         mav.addObject("uploadFile_js", uploadFileOfClient);
@@ -112,11 +144,11 @@ public class HelloController {
         	mav.addObject("uploadFile", uploadFile);
         	mav.addObject("searchResult", String.join("\n", searchResult));
         	mav.addObject("searchResultList", searchResultList);
-   //      	mav.addObject("note_js", String.join("\n", searchResult));
-   //      	mav.addObject("uploadFile_js", uploadFile);
-   //      	mav.addObject("searchResult_js", String.join("\n", searchResult));
+        	mav.addObject("note_js", String.join("\n", searchResult));
+        	mav.addObject("uploadFile_js", uploadFile);
+        	mav.addObject("searchResult_js", String.join("\n", searchResult));
 			mav.addObject("compareResult", String.join("\n", compareResult));
-			// mav.addObject("compareResult_js", String.join("\n", compareResult));
+			mav.addObject("compareResult_js", String.join("\n", compareResult));
             return mav;
 //        	mav.addObject("value", String.join("\n", searchResult));
         }catch(Exception e){
