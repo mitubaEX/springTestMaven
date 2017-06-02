@@ -19,21 +19,8 @@ public class HelloController {
     String uploadFile = "";
 
 	@RequestMapping(value="/", method=RequestMethod.GET)
-	// public ModelAndView index(@RequestParam("searchResult")String searchResultOfClient, @RequestParam("compareResult")String compareResultOfClient, @RequestParam("uploadFile")String uploadFileOfClient, ModelAndView mav){
 	public ModelAndView index(ModelAndView mav){
-    //     List<SearchResult> searchResultList = Arrays.stream(searchResultOfClient.split("\n"))
-    //             .map(i -> i.split(","))
-    //             .map(i -> new SearchResult(i[0], Double.parseDouble(i[1])))
-				// .collect(Collectors.toList());
-    //
-    //     List<CompareResult> compareResultList = Arrays.stream(compareResultOfClient.split("\n"))
-    //             .map(i -> i.split(","))
-    //             .map(i -> new CompareResult(i[0], Double.parseDouble(i[1])))
-				// .collect(Collectors.toList());
-
         mav.setViewName("index");
-        // mav.addObject("searchResultList", searchResultList);
-        // mav.addObject("compareResultList", compareResultList);
         return mav;
 	}
 
@@ -113,7 +100,8 @@ public class HelloController {
 	// jar application/java-archive
 	// class application/octet-stream
     @RequestMapping(value="/", method=RequestMethod.POST)
-    public ModelAndView send(@RequestParam("upload")MultipartFile file, @RequestParam("name")String rows, @RequestParam("searchResult")String searchResultOfClient,  ModelAndView mav){
+    // public ModelAndView send(@RequestParam("upload")MultipartFile file, @RequestParam("name")String rows, @RequestParam("searchResult")String searchResultOfClient,  ModelAndView mav){
+    public ModelAndView send(@RequestParam("upload")MultipartFile file, @RequestParam("searchResult")String searchResultOfClient,  ModelAndView mav){
     	try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
 //            List<String[]> readList = new ArrayList<>();
             List<String> searchResult = new ArrayList<>();
@@ -126,8 +114,9 @@ public class HelloController {
             new Extractor().createExtractFile(file);
             uploadFile = file.getOriginalFilename();
 
-            if(Objects.equals(rows, ""))//何も入力されなかったら，100件検索する．
-                rows = "100";
+            // if(Objects.equals(rows, ""))//何も入力されなかったら，100件検索する．
+            //     rows = "100";
+            String rows = "1000";
 
 
             readFile(new BufferedReader(new FileReader(new File(file.getOriginalFilename() + ".csv"))), rows).stream()

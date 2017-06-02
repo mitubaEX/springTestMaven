@@ -1,10 +1,18 @@
 @charset "UTF-8";
 
-
-#layout01 {
-  float: left;  /* 回り込み */
+header{
+    padding: 30px;
+    background: #c2edff;/*背景色*/
 }
 
-#layout02 {
-  float: right;  /* 回り込み */
+h1{
+    font-size: 240%;
+}
+
+h2 {
+    border-bottom: solid 1px black;
+    /*線の種類（実線） 太さ 色*/
+}
+
+h3{
 }
