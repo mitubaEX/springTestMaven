@@ -43,29 +43,65 @@
             load();
         }
     </script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>MITUBA</title>
 <link href="css/style.css" th:href="@{css/style.css}" rel="stylesheet"></link>
+<link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css"/>
+<script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
+<script>
+jQuery(function($){
+    $("#searchResultTable").DataTable({
+        order: [ [ 1, "desc" ] ]
+    });
+});
+jQuery(function($){
+    $("#compareResultTable").DataTable({
+        order: [ [ 1, "desc" ] ]
+    });
+});
+</script>
+<!-- BootstrapのCSS読み込み -->
+<link href="css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet"></link>
+<!-- BootstrapのJS読み込み -->
+<script src="js/bootstrap.min.js" th:href="@{js/bootstrap.min.js}"></script>
+
 </head>
 <body onload="insert()">
 <!-- <body> -->
     <form method="post" action="/" enctype="multipart/form-data">
-        <input type="text" name="name" size="40"/>
+        <div class="form-group">
+            <label for="exampleInputEmail1">rows</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="rows"/>
+        </div>
+        <!-- <input type="text" name="name" size="40"/> -->
+        <label for="exampleInputFile">File input</label>
 		<input type="file" id="upload" name="upload" />
         <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
         <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
-        <input type="submit" value="検索" />
+        <button type="submit" class="btn btn-default">検索</button>
 	</form>
     <!-- <div id="layout01"> -->
     <textarea id="note" name="note" cols="40" rows="40" readonly="readonly" style="display:none;"><span th:text="*{note}" th:remove="tag"></span></textarea>
     <textarea id="searchResult" name="searchResult" cols="40" rows="40" readonly="readonly" style="display:none;"><span th:text="*{searchResult}" th:remove="tag"></span></textarea>
 
-    <div style="height:200px; width:1000px; overflow-y:scroll;">
-        <table border="1">
-        <tr th:each="searchResult : ${searchResultList}">
-            <td th:text="${searchResult.filename}">111</td>
-            <td th:text="${searchResult.risk}">Yumi Wakatsuki</td>
-        </tr>
-        </table>
+    <div class="container">
+        <div class="table-responsive">
+            <table id="searchResultTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ファイル名</th>
+                        <th>危険度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="searchResult : ${searchResultList}">
+                        <td th:text="${searchResult.filename}">111</td>
+                        <td th:text="${searchResult.risk}">Yumi Wakatsuki</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <!-- <form method="GET" action="/download">                                                      -->
     <!--     <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/> -->
@@ -82,13 +118,23 @@
     <input type="submit" value="詳細に危険度を測定"/>
     </form>
     <!-- <textarea id="compareResult" name="compareResult" cols="40" rows="40" readonly="readonly"><span th:text="*{compareResult}" th:remove="tag"></span></textarea> -->
-    <div style="height:200px; width:1000px; overflow-y:scroll;">
-        <table border="1">
-        <tr th:each="compareResult : ${compareResultList}">
-            <td th:text="${compareResult.filename}">111</td>
-            <td th:text="${compareResult.risk}">Yumi Wakatsuki</td>
-        </tr>
-        </table>
+    <div class="container">
+        <div class="table-responsive">
+            <table id="compareResultTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ファイル名</th>
+                        <th>危険度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="compareResult : ${compareResultList}">
+                        <td th:text="${compareResult.filename}">111</td>
+                        <td th:text="${compareResult.risk}">Yumi Wakatsuki</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- <form method="GET" action="/downloadCompareResult">                                        -->
