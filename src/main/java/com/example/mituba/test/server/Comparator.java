@@ -25,16 +25,11 @@ public class Comparator {
 		filewriter.close();
 	}
 	
-	public void createFile(String filename, String birthmark){
+	public void createFile(String filename, String birthmark) throws IOException{
 		File file = new File(filename + ".csv");
 		if(!file.exists()){
-			try {
 				file.createNewFile();
                 writeFile(filename, birthmark, file);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 	

@@ -79,6 +79,7 @@ jQuery(function($){
 
         <h2>ファイルを投げて検索をする</h2>
         <p>classファイルかjarファイルを送信してください</p>
+        <h4><span style="color:red" th:text="*{errorMessageOfSearch}"></span></h4>
         <form method="post" action="/" enctype="multipart/form-data">
 
             <!-- <div class="form-group">                                                               -->
@@ -130,6 +131,8 @@ jQuery(function($){
 
 
         <h2>従来手法で比較をし，詳細な結果を表示する</h2>
+        <h4><span style="color:red" th:text="*{errorMessageOfCompare}"></span></h4>
+        
         <form method="POST" action="/compare">
             <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
             <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>

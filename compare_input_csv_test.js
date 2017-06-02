@@ -17,7 +17,7 @@ birthmarks = p.merge(q);
 
 comparisons = comparator.compare(birthmarks, pair2);
 
-fs.print(comparisons);
+// fs.print(comparisons);
 fs.writer(argv[2] + "-" + argv[3] + "-" + argv[1] + ".csv", comparisons);
 
 // fs.print("extraction: " + birthmarks.time() + " ns")
