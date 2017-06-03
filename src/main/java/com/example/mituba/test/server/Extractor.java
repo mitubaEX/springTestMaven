@@ -14,10 +14,10 @@ import com.github.pochi.runner.scripts.ScriptRunnerBuilder;
 //import com.google.common.io.Files;
 
 public class Extractor{
-	public void extractBirthmark(String fileOriginalName) throws IOException, ScriptException{
+	public void extractBirthmark(MultipartFile file) throws IOException, ScriptException{
 		ScriptRunnerBuilder builder = new ScriptRunnerBuilder();
 		ScriptRunner runner = builder.build();
-		String[] arg = { "./extract.js", fileOriginalName};
+		String[] arg = { "./extract.js", createOriginalFile(file)};
 		runner.runsScript(arg);
 	}
 
@@ -25,9 +25,5 @@ public class Extractor{
 		File saveFile = new File(file.getOriginalFilename());
 		Files.copy(file.getInputStream(), saveFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		return file.getOriginalFilename();
-	}
-
-	public void createExtractFile(MultipartFile file) throws IOException,ScriptException{
-		extractBirthmark(createOriginalFile(file));
 	}
 }

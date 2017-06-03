@@ -68,7 +68,7 @@ public class HelloController {
     public ModelAndView send(@RequestParam("upload")MultipartFile file, @RequestParam("searchResult")String searchResultOfClient,  ModelAndView mav){
     	try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
 
-            new Extractor().createExtractFile(file);
+            new Extractor().extractBirthmark(file);
             String uploadFile = file.getOriginalFilename();
             String rows = "1000";
             List<String> searchResult = new SearchResultCreater().getSearchResultOfString(file.getOriginalFilename() + ".csv", rows);

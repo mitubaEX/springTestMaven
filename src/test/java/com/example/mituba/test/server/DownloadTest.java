@@ -1,6 +1,7 @@
 package com.example.mituba.test.server;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -25,16 +26,28 @@ public class DownloadTest {
 	@Test
 	public void downloadCsvTestOfOneString(){
 		List<String> list = Arrays.asList("test");
-		downloadCsvTest(list);
+		assertEquals(downloadCsvString(list), String.join("\n", list));
 	}
 	
 	@Test
 	public void downloadCsvTestOfSeveralString(){
 		List<String> list = Arrays.asList("test", "hello", "world");
-		downloadCsvTest(list);
+		assertEquals(downloadCsvString(list), String.join("\n", list));
 	}
 	
-	public void downloadCsvTest(List<String> list) {
+	@Test
+	public void downloadCsvTestOfNull(){
+		List<String> list = null;
+		assertNull(downloadCsvString(list));
+	}
+	
+	@Test
+	public void downloadCsvTestOfOneStringCompareResult(){
+		List<String> list = Arrays.asList("test");
+		assertEquals(downloadCsvStringCompareResult(list), String.join("\n", list));
+	}
+	
+	public String downloadCsvString(List<String> list) {
 		try {
 			ResponseEntity<byte[]> response = new HelloController().download(String.join("\n", list));
 			Path tempPath = Files.createTempFile("temp", ".csv");
@@ -42,12 +55,29 @@ public class DownloadTest {
 				fileOutputStream.write(response.getBody());
 			}
 			try(BufferedReader br = new BufferedReader(new FileReader(tempPath.toFile()))){
-				assertEquals(String.join("\n", br.lines().collect(Collectors.toList())), String.join("\n", list));
+				return String.join("\n", br.lines().collect(Collectors.toList()));
 			}
 //			assertEquals(response.getBody()[0], "test");
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public String downloadCsvStringCompareResult(List<String> list) {
+		try {
+			ResponseEntity<byte[]> response = new HelloController().downloadCompareResult(String.join("\n", list));
+			Path tempPath = Files.createTempFile("temp", ".csv");
+			try(FileOutputStream fileOutputStream = new FileOutputStream(tempPath.toFile())){
+				fileOutputStream.write(response.getBody());
+			}
+			try(BufferedReader br = new BufferedReader(new FileReader(tempPath.toFile()))){
+				return String.join("\n", br.lines().collect(Collectors.toList()));
+			}
+//			assertEquals(response.getBody()[0], "test");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return null;
 		}
 	}
 }
