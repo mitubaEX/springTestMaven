@@ -12,6 +12,7 @@ public class SearchResultCreater {
 	public List<SearchResult> getSearchResultOfSearchResult(String searchResult){
 		return Arrays.stream(searchResult.split("\n"))
 				.map(i -> i.split(","))
+				.filter(i -> i.length >= 3)
 				.map(i -> new SearchResult(i[0], i[1], Double.parseDouble(i[2])))
 				.collect(Collectors.toList());
 	}
@@ -19,6 +20,7 @@ public class SearchResultCreater {
 	public List<SearchResult> getSearchResultOfSearchResult(List<String> searchResult){
 		return searchResult.stream() 
 				.map(i -> i.split(","))
+				.filter(i -> i.length >= 3)
 				.map(i -> new SearchResult(i[0], i[1], Double.parseDouble(i[2])))
 				.collect(Collectors.toList());
 	}
