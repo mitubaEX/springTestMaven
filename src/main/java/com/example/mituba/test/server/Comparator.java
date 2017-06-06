@@ -13,34 +13,44 @@ import com.github.pochi.runner.scripts.ScriptRunnerBuilder;
 public class Comparator {
 	public List<String> getCompareResult(List<String> list, String kindOfBirthmark, String uploadFile){
 		return list.stream()
-			.map(n -> n.split(",",3))
-			.filter(n -> n.length >= 3)
-			.map(n -> compare(n[0] ,n[1], n[2], kindOfBirthmark, uploadFile))
+			.map(n -> n.split(",",4))
+			.filter(n -> n.length >= 4)
+			.map(n -> compare(createFile(n[1], n[3], "2-gram"), kindOfBirthmark, uploadFile))
 			.collect(Collectors.toList());
 	}
 	
-	public void writeFile(String filename, String birthmark, File file) throws IOException{
+	// csvファイルとして書き込む
+	public void writeFile(String filename, String birthmark, File file, String kindOfBirthmark) throws IOException{
 		FileWriter filewriter = new FileWriter(file);
-		filewriter.write(filename+",,2-gram," + birthmark);
+		filewriter.write(filename.replace("/", ".")+",," + kindOfBirthmark + "," + birthmark);
 		filewriter.close();
 	}
 	
-	public void createFile(String filename, String birthmark) throws IOException{
-		File file = new File(filename + ".csv");
-		if(!file.exists()){
+	// csvファイルとして作成しwriteFileを呼ぶ
+	public String createFile(String filename, String birthmark, String kindOfBirthmark){
+		try{
+			File file = new File(filename + ".csv");
+			if(file.exists()){
+				return filename + ".csv";
+			}else{
 				file.createNewFile();
-                writeFile(filename, birthmark, file);
+				writeFile(filename, birthmark, file, kindOfBirthmark);
+				return filename + ".csv";
+			}
+		}catch (IOException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return "";
 		}
 	}
 	
-	public String compare(String filename, String lev, String birthmark, String kindOfBirthmark, String uploadFile){
+	public String compare(String filename, String kindOfBirthmark, String uploadFile){
         try {
-            createFile(filename, birthmark);
             ScriptRunnerBuilder builder = new ScriptRunnerBuilder();
             ScriptRunner runner = builder.build();
-            String[] arg = { "./compare_input_csv_test.js", kindOfBirthmark, uploadFile + ".csv", filename + ".csv" };
+            String[] arg = { "./compare_input_csv_test.js", kindOfBirthmark, uploadFile, filename };
 			runner.runsScript(arg);
-			return uploadFile + ".csv-" + filename + ".csv-" + kindOfBirthmark + ".csv";  
+			return uploadFile.replace("/", ".") + "-" + filename.replace("/", ".") + "-" + kindOfBirthmark + ".csv";  
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

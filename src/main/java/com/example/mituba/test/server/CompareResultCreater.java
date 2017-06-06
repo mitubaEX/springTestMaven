@@ -44,7 +44,7 @@ public class CompareResultCreater {
 			.distinct()
 			.map(n -> readFileOfCompareResult(n))
 			.map(n -> n.split(","))
-			.map(n -> new CompareResult(n[1], Double.parseDouble(n[2])))
+			.map(n -> new CompareResult(n[0], n[1], Double.parseDouble(n[2])))
 			.sorted((CompareResult1, CompareResult2) -> CompareResult2.riskNum.compareTo(CompareResult1.riskNum))
 			.collect(Collectors.toList());
 	}

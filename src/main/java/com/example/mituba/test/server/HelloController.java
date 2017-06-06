@@ -42,22 +42,32 @@ public class HelloController {
 	@RequestMapping(value="/compare", method=RequestMethod.POST)
 	public ModelAndView compare(@RequestParam("searchResult")String searchResultOfClient,@RequestParam("uploadFile")String uploadFileOfClient,  ModelAndView mav){
 		try{
-			CompareResultCreater creater = new CompareResultCreater(searchResultOfClient, "2-gram", uploadFileOfClient);
-
+			CompareResultCreater creater = new CompareResultCreater(searchResultOfClient, "2-gram", uploadFileOfClient + ".csv");
+			System.out.println(1);
+			List<CompareResult> compareResultList  = creater.getCompareResultOfCompareResult();
+			System.out.println(2);
+			List<String> compareResultStringList  = creater.getCompareResultOfString();
+			System.out.println(3);
+			List<SearchResult> searchResultList = new SearchResultCreater().getSearchResultOfSearchResult(searchResultOfClient);
+			System.out.println(4);
+			searchResultList.stream().forEach(n -> new FileControler().deleteFile(n.filename + ".csv"));
+			compareResultList.stream().forEach(n -> new FileControler().deleteFile(n.myFileName + ".class.csv-" +n.filename + ".csv-2-gram.csv"));
+			
 			mav.setViewName("index");
 			mav.addObject("searchResult", searchResultOfClient);
 			mav.addObject("note", searchResultOfClient);
 			mav.addObject("uploadFile", uploadFileOfClient);
-			mav.addObject("compareResult", String.join("\n", creater.getCompareResultOfString()));
-			mav.addObject("searchResultList", new SearchResultCreater().getSearchResultOfSearchResult(searchResultOfClient));
+			mav.addObject("compareResult", String.join("\n", compareResultStringList));
+			mav.addObject("searchResultList", searchResultList);
 //			mav.addObject("compareResultList", compareResultList);
-			mav.addObject("compareResultList", creater.getCompareResultOfCompareResult());
+			mav.addObject("compareResultList", compareResultList);
 			mav.addObject("searchResult_js", searchResultOfClient);
 			mav.addObject("note_js", searchResultOfClient);
 			mav.addObject("uploadFile_js", uploadFileOfClient);
-			mav.addObject("compareResult_js", String.join("\n", creater.getCompareResultOfString()));
+			mav.addObject("compareResult_js", String.join("\n", compareResultStringList));
 			return mav;
 		}catch(Exception e){
+			e.printStackTrace();
 			mav.setViewName("index");
         	mav.addObject("errorMessageOfCompare", "検索結果がないので比較できません");
 			return mav;
@@ -71,7 +81,7 @@ public class HelloController {
             new Extractor().extractBirthmark(file);
             String uploadFile = file.getOriginalFilename();
             String rows = "1000";
-            List<String> searchResult = new SearchResultCreater().getSearchResultOfString(file.getOriginalFilename() + ".csv", rows);
+            List<String> searchResult = new SearchResultCreater().getSearchResultOfString(file.getOriginalFilename(), rows);
             List<SearchResult> searchResultList = new SearchResultCreater().getSearchResultOfSearchResult(searchResult);
 			List<String> compareResult = new ArrayList<>();
             

@@ -57,7 +57,7 @@ jQuery(function($){
 });
 jQuery(function($){
     $("#compareResultTable").DataTable({
-        order: [ [ 1, "desc" ] ]
+        order: [ [ 2, "desc" ] ]
     });
 });
         </script>
@@ -109,12 +109,14 @@ jQuery(function($){
                 <table id="searchResultTable" class="table table-striped">
                     <thead>
                         <tr>
+                            <th>ファイル名(検索使用)</th>
                             <th>ファイル名</th>
                             <th>危険度</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="searchResult : ${searchResultList}">
+                            <td th:text="${searchResult.myFileName}">111</td>
                             <td th:text="${searchResult.filename}">111</td>
                             <td th:text="${searchResult.risk}">Yumi Wakatsuki</td>
                         </tr>
@@ -149,12 +151,14 @@ jQuery(function($){
                 <table id="compareResultTable" class="table table-striped">
                     <thead>
                         <tr>
+                            <th>ファイル名(検索使用)</th>
                             <th>ファイル名</th>
                             <th>危険度</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="compareResult : ${compareResultList}">
+                            <td th:text="${compareResult.myFileName}">111</td>
                             <td th:text="${compareResult.filename}">111</td>
                             <td th:text="${compareResult.risk}">Yumi Wakatsuki</td>
                         </tr>

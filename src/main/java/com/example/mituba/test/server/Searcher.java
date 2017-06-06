@@ -8,20 +8,21 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Searcher{
     private String birthmark;
     private String portNum;
     private String kindOfBirthmark;
     private String rows;
-    private Double threshold;
+    private String myFileName;
 
-    public Searcher(String birthmark, String portNum, String kindOfBirthmark, String rows, Double threshold){
+    public Searcher(String myFileName, String birthmark, String portNum, String kindOfBirthmark, String rows){
         this.birthmark = birthmark;
         this.portNum = portNum;
         this.kindOfBirthmark = kindOfBirthmark;
         this.rows = rows;
-        this.threshold = threshold;
+        this.myFileName = myFileName;
     }
 
 
@@ -48,12 +49,11 @@ public class Searcher{
 
     public List<String> searchPerform(){
         try{
-        	List<String> list = new ArrayList<>();
-        	new BufferedReader(new InputStreamReader(getCurlProcess().getInputStream())).lines()
+        	return new BufferedReader(new InputStreamReader(getCurlProcess().getInputStream())).lines()
         			.map(n -> n.split(",",3))
                     .filter(i -> i.length >= 3  && !Objects.equals(i[1], "lev"))
-                    .forEach(n -> list.add(n[0] + "," + n[1] + "," + n[2]));
-            return list;
+                    .map(n -> myFileName + "," + n[0] + "," + n[1] + "," + n[2])
+                    .collect(Collectors.toList());
         }catch(Exception e){
             System.out.println(e + ":solrj");
             return new ArrayList<>();

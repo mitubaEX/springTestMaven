@@ -18,7 +18,10 @@ birthmarks = p.merge(q);
 comparisons = comparator.compare(birthmarks, pair2);
 
 // fs.print(comparisons);
-fs.writer(argv[2] + "-" + argv[3] + "-" + argv[1] + ".csv", comparisons);
+//
+// var regExp = new RegExp("/", "g");
+var reg = /\//g;
+fs.writer(argv[2].replace(reg,".") + "-" + argv[3].replace(reg,".") + "-" + argv[1] + ".csv", comparisons);
 
 // fs.print("extraction: " + birthmarks.time() + " ns")
 // fs.print("comparison: " + comparisons.time() + " ns")
