@@ -52,12 +52,16 @@ function insert(){
         <script>
 jQuery(function($){
     $("#searchResultTable").DataTable({
-        order: [ [ 1, "desc" ] ]
+        order: [ [ 1, "desc" ] ],
+        bStateSave:true,
+        searching: false
     });
 });
 jQuery(function($){
     $("#compareResultTable").DataTable({
-        order: [ [ 2, "desc" ] ]
+        order: [ [ 2, "desc" ] ],
+        bStateSave:true,
+        searching: false
     });
 });
         </script>
