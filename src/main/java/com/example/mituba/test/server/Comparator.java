@@ -13,28 +13,28 @@ import com.github.pochi.runner.scripts.ScriptRunnerBuilder;
 public class Comparator {
 	public List<String> getCompareResult(List<String> list, String kindOfBirthmark, String uploadFile){
 		return list.stream()
-			.map(n -> n.split(",",4))
-			.filter(n -> n.length >= 4)
-			.map(n -> compare(createFile(n[1], n[3], "2-gram"), kindOfBirthmark, uploadFile))
+			.map(n -> n.split(",",5))
+			.filter(n -> n.length >= 5)
+			.map(n -> compare(createFile(n[1], n[4], "2-gram", n[3]), kindOfBirthmark, uploadFile))
 			.collect(Collectors.toList());
 	}
 	
 	// csvファイルとして書き込む
-	public void writeFile(String filename, String birthmark, File file, String kindOfBirthmark) throws IOException{
+	public void writeFile(String filename, String birthmark, File file, String kindOfBirthmark, String jar) throws IOException{
 		FileWriter filewriter = new FileWriter(file);
-		filewriter.write(filename.replace("/", ".")+",," + kindOfBirthmark + "," + birthmark);
+		filewriter.write(filename.replace("/", ".")+","+ jar +"," + kindOfBirthmark + "," + birthmark);
 		filewriter.close();
 	}
 	
 	// csvファイルとして作成しwriteFileを呼ぶ
-	public String createFile(String filename, String birthmark, String kindOfBirthmark){
+	public String createFile(String filename, String birthmark, String kindOfBirthmark, String jar){
 		try{
 			File file = new File(filename + ".csv");
 			if(file.exists()){
 				return filename + ".csv";
 			}else{
 				file.createNewFile();
-				writeFile(filename, birthmark, file, kindOfBirthmark);
+				writeFile(filename, birthmark, file, kindOfBirthmark, jar);
 				return filename + ".csv";
 			}
 		}catch (IOException e) {

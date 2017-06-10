@@ -29,7 +29,7 @@ public class SearchResultCreater {
     	return br.lines()
             .map(n -> n.split(",",3))
             .filter(n -> n.length >= 3)
-            .map(n -> new Searcher(n[0], n[2],"8982", "2gram", rows))
+            .map(n -> new Searcher(n[0], n[2],"8982", "2gram", rows)) //ここを変更すると異なるバースマークの検索結果を取得可能
             .collect(Collectors.toList());
     }
 	
