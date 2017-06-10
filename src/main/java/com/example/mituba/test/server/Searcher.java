@@ -29,7 +29,7 @@ public class Searcher{
     public Process getCurlProcess(){
         try {
             return Runtime.getRuntime().exec("curl http://localhost:"+portNum+"/solr/" + kindOfBirthmark + "/query"
-                + "?fl=filename,lev:strdist(data,\"" + URLEncoder.encode(birthmark, "UTF-8")+"\",edit),data&sort="+"strdist(data,\"" + URLEncoder.encode(birthmark, "UTF-8") + "\",edit)+desc"+" -d {"
+                + "?fl=filename,lev:strdist(birthmark,\"" + URLEncoder.encode(birthmark, "UTF-8")+"\",edit),jar,birthmark&sort="+"strdist(birthmark,\"" + URLEncoder.encode(birthmark, "UTF-8") + "\",edit)+desc"+" -d {"
                 + "params:{"
                 + "q:\""+birthmark.replace(" ", "+")+"\","
                 + "rows:"+rows+","
@@ -50,9 +50,9 @@ public class Searcher{
     public List<String> searchPerform(){
         try{
         	return new BufferedReader(new InputStreamReader(getCurlProcess().getInputStream())).lines()
-        			.map(n -> n.split(",",3))
-                    .filter(i -> i.length >= 3  && !Objects.equals(i[1], "lev"))
-                    .map(n -> myFileName + "," + n[0] + "," + n[1] + "," + n[2])
+        			.map(n -> n.split(",",4))
+                    .filter(i -> i.length >= 4  && !Objects.equals(i[1], "lev"))
+                    .map(n -> myFileName + "," + n[0] + "," + n[1] + "," + n[2] + "," + n[3])
                     .collect(Collectors.toList());
         }catch(Exception e){
             System.out.println(e + ":solrj");

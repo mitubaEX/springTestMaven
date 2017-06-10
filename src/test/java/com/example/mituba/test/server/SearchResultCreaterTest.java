@@ -16,10 +16,10 @@ public class SearchResultCreaterTest {
     @Test
     public void getSearchResultOfSearchResultTest(){
         assertTrue(new SearchResultCreater().getSearchResultOfSearchResult("").isEmpty());
-        assertEquals(new SearchResultCreater().getSearchResultOfSearchResult("a,b,0.2\nc,d,0.4").size(), 2);
+        assertEquals(new SearchResultCreater().getSearchResultOfSearchResult("a,b,0.2,f\nc,d,0.4,h").size(), 2);
 
         assertTrue(new SearchResultCreater().getSearchResultOfSearchResult(new ArrayList<>()).isEmpty());
-        String[] strArray = {"a,b,0.2", "c,d,0.4"};
+        String[] strArray = {"a,b,0.2,f", "c,d,0.4,h"};
         assertEquals(new SearchResultCreater().getSearchResultOfSearchResult(Arrays.asList(strArray)).size(), 2);
 
         try {
