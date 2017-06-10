@@ -13,15 +13,15 @@ public class SearchResultCreater {
 		return Arrays.stream(searchResult.split("\n"))
 				.map(i -> i.split(","))
 				.filter(i -> i.length >= 3)
-				.map(i -> new SearchResult(i[0], i[1], Double.parseDouble(i[2])))
+				.map(i -> new SearchResult(i[0], i[1], Double.parseDouble(i[2]), i[3]))
 				.collect(Collectors.toList());
 	}
 	
 	public List<SearchResult> getSearchResultOfSearchResult(List<String> searchResult){
 		return searchResult.stream() 
 				.map(i -> i.split(","))
-				.filter(i -> i.length >= 3)
-				.map(i -> new SearchResult(i[0], i[1], Double.parseDouble(i[2])))
+				.filter(i -> i.length >= 4)
+				.map(i -> new SearchResult(i[0], i[1], Double.parseDouble(i[2]), i[3]))
 				.collect(Collectors.toList());
 	}
 	
@@ -29,7 +29,7 @@ public class SearchResultCreater {
     	return br.lines()
             .map(n -> n.split(",",3))
             .filter(n -> n.length >= 3)
-            .map(n -> new Searcher(n[0], n[2],"8982", "2gram", rows))
+            .map(n -> new Searcher(n[0], n[2],"8982", "2gram", rows)) //ここを変更すると異なるバースマークの検索結果を取得可能
             .collect(Collectors.toList());
     }
 	

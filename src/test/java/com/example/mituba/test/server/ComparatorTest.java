@@ -43,15 +43,15 @@ public class ComparatorTest {
 	
 	@Test
 	public void createFileNameTest(){
-		String tmpString = new Comparator().createFile("a", "b", "2-gram");
+		String tmpString = new Comparator().createFile("a", "b", "2-gram", "c");
 		assertEquals(tmpString, "a.csv");
-		assertEquals(fileControler.readFile(tmpString), "a,,2-gram,b");
+		assertEquals(fileControler.readFile(tmpString), "a,c,2-gram,b");
 		fileControler.deleteFile(tmpString);;
 	}
 	
 	@Test
 	public void createFileNameTestExist(){
-		String tmpString = new Comparator().createFile("src/test/resources/FizzBuzz.class", "b", "2-gram");
+		String tmpString = new Comparator().createFile("src/test/resources/FizzBuzz.class", "b", "2-gram", "c");
 		assertEquals(tmpString, "src/test/resources/FizzBuzz.class.csv");
 	}
 	

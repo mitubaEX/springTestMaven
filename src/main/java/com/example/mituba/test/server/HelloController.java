@@ -80,7 +80,9 @@ public class HelloController {
 
             new Extractor().extractBirthmark(file);
             String uploadFile = file.getOriginalFilename();
-            String rows = "1000";
+
+            String rows = "10";//デフォルトを10にしておく
+
             List<String> searchResult = new SearchResultCreater().getSearchResultOfString(file.getOriginalFilename(), rows);
             List<SearchResult> searchResultList = new SearchResultCreater().getSearchResultOfSearchResult(searchResult);
 			List<String> compareResult = new ArrayList<>();
