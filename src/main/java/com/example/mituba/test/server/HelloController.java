@@ -12,7 +12,7 @@ import org.springframework.http.*;
 public class HelloController {
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public ModelAndView index(ModelAndView mav){
-        mav.setViewName("index");
+        mav.setViewName("search");
         return mav;
 	}
 
@@ -34,7 +34,7 @@ public class HelloController {
     
 	@RequestMapping(value="/compare", method=RequestMethod.GET)
 	public ModelAndView compare(ModelAndView mav){
-        mav.setViewName("index");
+        mav.setViewName("search");
 		return mav;
 	}
 	
@@ -43,17 +43,13 @@ public class HelloController {
 	public ModelAndView compare(@RequestParam("searchResult")String searchResultOfClient,@RequestParam("uploadFile")String uploadFileOfClient,  ModelAndView mav){
 		try{
 			CompareResultCreater creater = new CompareResultCreater(searchResultOfClient, "2-gram", uploadFileOfClient + ".csv");
-			System.out.println(1);
 			List<CompareResult> compareResultList  = creater.getCompareResultOfCompareResult();
-			System.out.println(2);
 			List<String> compareResultStringList  = creater.getCompareResultOfString();
-			System.out.println(3);
 			List<SearchResult> searchResultList = new SearchResultCreater().getSearchResultOfSearchResult(searchResultOfClient);
-			System.out.println(4);
 			searchResultList.stream().forEach(n -> new FileControler().deleteFile(n.filename + ".csv"));
 			compareResultList.stream().forEach(n -> new FileControler().deleteFile(n.myFileName + ".class.csv-" +n.filename + ".csv-2-gram.csv"));
 			
-			mav.setViewName("index");
+			mav.setViewName("compareResult");
 			mav.addObject("searchResult", searchResultOfClient);
 			mav.addObject("note", searchResultOfClient);
 			mav.addObject("uploadFile", uploadFileOfClient);
@@ -68,7 +64,7 @@ public class HelloController {
 			return mav;
 		}catch(Exception e){
 			e.printStackTrace();
-			mav.setViewName("index");
+			mav.setViewName("searchResult");
         	mav.addObject("errorMessageOfCompare", "検索結果がないので比較できません");
 			return mav;
 		}
@@ -87,7 +83,7 @@ public class HelloController {
             List<SearchResult> searchResultList = new SearchResultCreater().getSearchResultOfSearchResult(searchResult);
 			List<String> compareResult = new ArrayList<>();
             
-        	mav.setViewName("index");
+        	mav.setViewName("searchResult");
         	mav.addObject("note", String.join("\n", searchResult));
         	mav.addObject("uploadFile", uploadFile);
         	mav.addObject("searchResult", String.join("\n", searchResult));
@@ -100,7 +96,7 @@ public class HelloController {
             return mav;
 //        	mav.addObject("value", String.join("\n", searchResult));
         }catch(Exception e){
-        	mav.setViewName("index");
+        	mav.setViewName("search");
         	mav.addObject("errorMessageOfSearch", "対応可能な形式はclassとjarです");
             return mav;
         }
