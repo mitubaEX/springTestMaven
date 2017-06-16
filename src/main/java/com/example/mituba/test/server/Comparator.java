@@ -11,11 +11,11 @@ import com.github.pochi.runner.scripts.ScriptRunner;
 import com.github.pochi.runner.scripts.ScriptRunnerBuilder;
 
 public class Comparator {
-	public List<String> getCompareResult(List<String> list, String kindOfBirthmark, String uploadFile){
+	public List<ComparatorClassInformation> getCompareResult(List<String> list, String kindOfBirthmark, String uploadFile){
 		return list.stream()
-			.map(n -> n.split(",",5))
-			.filter(n -> n.length >= 5)
-			.map(n -> compare(createFile(n[1], n[4], "2-gram", n[3]), kindOfBirthmark, uploadFile))
+			.map(n -> n.split(",",8))
+			.filter(n -> n.length >= 8)
+			.map(n -> compare(createFile(n[1], n[7], "2-gram", n[3]), kindOfBirthmark, uploadFile, n[3], n[4], n[5], n[6]))
 			.collect(Collectors.toList());
 	}
 	
@@ -44,21 +44,22 @@ public class Comparator {
 		}
 	}
 	
-	public String compare(String filename, String kindOfBirthmark, String uploadFile){
+	public ComparatorClassInformation compare(String filename, String kindOfBirthmark, String uploadFile, String jar,String groupID, String artifactID, String version){
         try {
             ScriptRunnerBuilder builder = new ScriptRunnerBuilder();
             ScriptRunner runner = builder.build();
             String[] arg = { "./compare_input_csv_test.js", kindOfBirthmark, uploadFile, filename };
 			runner.runsScript(arg);
-			return uploadFile.replace("/", ".") + "-" + filename.replace("/", ".") + "-" + kindOfBirthmark + ".csv";  
+			return new ComparatorClassInformation(uploadFile.replace("/", ".") + "-" + filename.replace("/", ".") + "-" + kindOfBirthmark + ".csv",
+					jar,groupID, artifactID, version);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "";
+			return new ComparatorClassInformation("","","","", "");
 		} catch (ScriptException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "";
+			return new ComparatorClassInformation("","","","", "");
 		}
 	}
 }

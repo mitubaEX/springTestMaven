@@ -81,6 +81,9 @@ public class HelloController {
 
             List<String> searchResult = new SearchResultCreater().getSearchResultOfString(file.getOriginalFilename(), rows);
             List<SearchResult> searchResultList = new SearchResultCreater().getSearchResultOfSearchResult(searchResult);
+//            List<String> classInformationList = new SearchResultCreater().getClassInformationList(searchResultList);
+//            classInformationList.stream()
+//					.forEach(System.out::println);
 			List<String> compareResult = new ArrayList<>();
             
         	mav.setViewName("searchResult");

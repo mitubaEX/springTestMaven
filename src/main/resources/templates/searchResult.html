@@ -66,10 +66,19 @@
             });
         });
     </script>
+    <script>
+        $(function(){
+            $('#demo1').niceTooltip({
+                HTML: "つーるちっぷ"
+            });
+        });
+    </script>
+k
     <!-- BootstrapのCSS読み込み -->
     <link href="css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet"></link>
     <!-- BootstrapのJS読み込み -->
     <script src="js/bootstrap.min.js" th:href="@{js/bootstrap.min.js}"></script>
+    <script src="js/nicetooltip.js" th:href="@{js/nicetooltip.js}"></script>
 
 </head>
 <body onload="insert()">
@@ -112,6 +121,7 @@
             <tr>
                 <th>ファイル名(検索使用)</th>
                 <th>ファイル名</th>
+                <th>クラス情報</th>
                 <th>jarファイル名</th>
                 <th>危険度</th>
             </tr>
@@ -120,6 +130,7 @@
             <tr th:each="searchResult : ${searchResultList}">
                 <td th:text="${searchResult.myFileName}">111</td>
                 <td th:text="${searchResult.filename}">111</td>
+                <td th:text="${searchResult.classInformation}">111</td>
                 <td th:text="${searchResult.jar}">111</td>
                 <td th:text="${searchResult.risk}">Yumi Wakatsuki</td>
             </tr>

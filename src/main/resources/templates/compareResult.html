@@ -109,6 +109,8 @@
             <tr>
                 <th>ファイル名(検索使用)</th>
                 <th>ファイル名</th>
+                <th>クラス情報</th>
+                <th>jarファイル名</th>
                 <th>危険度</th>
             </tr>
             </thead>
@@ -116,6 +118,8 @@
             <tr th:each="compareResult : ${compareResultList}">
                 <td th:text="${compareResult.myFileName}">111</td>
                 <td th:text="${compareResult.filename}">111</td>
+                <td th:text="${compareResult.classInformation}">111</td>
+                <td th:text="${compareResult.jar}">111</td>
                 <td th:text="${compareResult.risk}">Yumi Wakatsuki</td>
             </tr>
             </tbody>
