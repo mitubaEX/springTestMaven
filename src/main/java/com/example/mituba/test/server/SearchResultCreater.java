@@ -32,9 +32,9 @@ public class SearchResultCreater {
 	
     public List<Searcher> readFile(BufferedReader br, String rows){
     	return br.lines()
-            .map(n -> n.split(",",3))
-            .filter(n -> n.length >= 3)
-            .map(n -> new Searcher(n[0], n[2],"8982", birthmark, rows)) //ここを変更すると異なるバースマークの検索結果を取得可能
+            .map(n -> n.split(",",4))
+            .filter(n -> n.length >= 4)
+            .map(n -> new Searcher(n[0], n[3],"8982", birthmark, rows)) //ここを変更すると異なるバースマークの検索結果を取得可能
             .collect(Collectors.toList());
     }
 	

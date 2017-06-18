@@ -31,7 +31,7 @@ public class Searcher{
             return Runtime.getRuntime().exec("curl http://localhost:"+portNum+"/solr/" + kindOfBirthmark + "/query"
                 + "?fl=filename,lev:strdist(birthmark,\"" + URLEncoder.encode(birthmark, "UTF-8")+"\",edit),jar,groupID,artifactID,version,birthmark&sort="+"strdist(birthmark,\"" + URLEncoder.encode(birthmark, "UTF-8") + "\",edit)+desc"+" -d {"
                 + "params:{"
-                + "q:\""+birthmark.replace(" ", "+")+"\","
+                + "q:\""+birthmark.replace(" ", "+").replace(".", "-")+"\","
                 + "rows:"+rows+","
                 + "wt:\"csv\""
                 + "}"
