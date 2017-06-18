@@ -15,14 +15,14 @@ public class Comparator {
 		return list.stream()
 			.map(n -> n.split(",",8))
 			.filter(n -> n.length >= 8)
-			.map(n -> compare(createFile(n[1], n[7], "2-gram", n[3]), kindOfBirthmark, uploadFile, n[3], n[4], n[5], n[6]))
+			.map(n -> compare(createFile(n[1], n[7], kindOfBirthmark, n[3]), kindOfBirthmark, uploadFile, n[3], n[4], n[5], n[6]))
 			.collect(Collectors.toList());
 	}
 	
 	// csvファイルとして書き込む
 	public void writeFile(String filename, String birthmark, File file, String kindOfBirthmark, String jar) throws IOException{
 		FileWriter filewriter = new FileWriter(file);
-		filewriter.write(filename.replace("/", ".")+","+ jar +"," + kindOfBirthmark + "," + birthmark);
+		filewriter.write(filename.replace("/", ".")+","+ jar +"," + kindOfBirthmark + "," + birthmark.replace("-", "."));
 		filewriter.close();
 	}
 	
@@ -31,6 +31,9 @@ public class Comparator {
 		try{
 			File file = new File(filename + ".csv");
 			if(file.exists()){
+				new FileControler().deleteFile(filename + ".csv");
+				file.createNewFile();
+				writeFile(filename, birthmark, file, kindOfBirthmark, jar);
 				return filename + ".csv";
 			}else{
 				file.createNewFile();

@@ -74,14 +74,13 @@ public class HelloController {
     public ModelAndView send(@RequestParam("upload")MultipartFile file, @RequestParam("searchResult")String searchResultOfClient, @RequestParam("birthmark") String birthmark, ModelAndView mav){
     	try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
 
-            new Extractor().extractBirthmark(file);
+            new Extractor().extractBirthmark(file, birthmark);
             String uploadFile = file.getOriginalFilename();
 
             String rows = "10";//デフォルトを10にしておく
-			System.out.println(birthmark);
 
-            List<String> searchResult = new SearchResultCreater(birthmark).getSearchResultOfString(file.getOriginalFilename(), rows);
-            List<SearchResult> searchResultList = new SearchResultCreater(birthmark).getSearchResultOfSearchResult(searchResult);
+            List<String> searchResult = new SearchResultCreater(birthmark.replace("-", "")).getSearchResultOfString(file.getOriginalFilename(), rows);
+            List<SearchResult> searchResultList = new SearchResultCreater(birthmark.replace("-", "")).getSearchResultOfSearchResult(searchResult);
 //            List<String> classInformationList = new SearchResultCreater().getClassInformationList(searchResultList);
 //            classInformationList.stream()
 //					.forEach(System.out::println);

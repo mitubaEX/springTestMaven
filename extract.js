@@ -1,4 +1,4 @@
-extractor = bmsys.extractor("2-gram");
+extractor = bmsys.extractor(argv[2]);
 source = fs.open(argv[1]);
 birthmarks = extractor.extract(source);
 
