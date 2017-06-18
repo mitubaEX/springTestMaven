@@ -40,21 +40,21 @@ public class HelloController {
 	
 
 	@RequestMapping(value="/compare", method=RequestMethod.POST)
-	public ModelAndView compare(@RequestParam("searchResult")String searchResultOfClient,@RequestParam("uploadFile")String uploadFileOfClient,  ModelAndView mav){
+	public ModelAndView compare(@RequestParam("searchResult")String searchResultOfClient,@RequestParam("uploadFile")String uploadFileOfClient, @RequestParam("birthmark")String birthmark,  ModelAndView mav){
 		try{
-			CompareResultCreater creater = new CompareResultCreater(searchResultOfClient, "2-gram", uploadFileOfClient + ".csv");
+			CompareResultCreater creater = new CompareResultCreater(searchResultOfClient, birthmark, uploadFileOfClient + ".csv");
 			List<CompareResult> compareResultList  = creater.getCompareResultOfCompareResult();
 			List<String> compareResultStringList  = creater.getCompareResultOfString();
-			List<SearchResult> searchResultList = new SearchResultCreater().getSearchResultOfSearchResult(searchResultOfClient);
-			searchResultList.stream().forEach(n -> new FileControler().deleteFile(n.filename + ".csv"));
-			compareResultList.stream().forEach(n -> new FileControler().deleteFile(n.myFileName + ".class.csv-" +n.filename + ".csv-2-gram.csv"));
+//			List<SearchResult> searchResultList = new SearchResultCreater().getSearchResultOfSearchResult(searchResultOfClient);
+//			searchResultList.stream().forEach(n -> new FileControler().deleteFile(n.filename + ".csv"));
+			compareResultList.stream().forEach(n -> new FileControler().deleteFile(n.myFileName + ".class.csv-" +n.filename + ".csv-" + birthmark + ".csv"));
 			
 			mav.setViewName("compareResult");
 			mav.addObject("searchResult", searchResultOfClient);
 			mav.addObject("note", searchResultOfClient);
 			mav.addObject("uploadFile", uploadFileOfClient);
 			mav.addObject("compareResult", String.join("\n", compareResultStringList));
-			mav.addObject("searchResultList", searchResultList);
+//			mav.addObject("searchResultList", searchResultList);
 //			mav.addObject("compareResultList", compareResultList);
 			mav.addObject("compareResultList", compareResultList);
 			mav.addObject("searchResult_js", searchResultOfClient);
@@ -71,16 +71,17 @@ public class HelloController {
 	}
 
     @RequestMapping(value="/", method=RequestMethod.POST)
-    public ModelAndView send(@RequestParam("upload")MultipartFile file, @RequestParam("searchResult")String searchResultOfClient,  ModelAndView mav){
+    public ModelAndView send(@RequestParam("upload")MultipartFile file, @RequestParam("searchResult")String searchResultOfClient, @RequestParam("birthmark") String birthmark, ModelAndView mav){
     	try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
 
             new Extractor().extractBirthmark(file);
             String uploadFile = file.getOriginalFilename();
 
             String rows = "10";//デフォルトを10にしておく
+			System.out.println(birthmark);
 
-            List<String> searchResult = new SearchResultCreater().getSearchResultOfString(file.getOriginalFilename(), rows);
-            List<SearchResult> searchResultList = new SearchResultCreater().getSearchResultOfSearchResult(searchResult);
+            List<String> searchResult = new SearchResultCreater(birthmark).getSearchResultOfString(file.getOriginalFilename(), rows);
+            List<SearchResult> searchResultList = new SearchResultCreater(birthmark).getSearchResultOfSearchResult(searchResult);
 //            List<String> classInformationList = new SearchResultCreater().getClassInformationList(searchResultList);
 //            classInformationList.stream()
 //					.forEach(System.out::println);
@@ -93,6 +94,7 @@ public class HelloController {
         	mav.addObject("searchResultList", searchResultList);
         	mav.addObject("note_js", String.join("\n", searchResult));
         	mav.addObject("uploadFile_js", uploadFile);
+        	mav.addObject("birthmark", birthmark);
         	mav.addObject("searchResult_js", String.join("\n", searchResult));
 			mav.addObject("compareResult", String.join("\n", compareResult));
 			mav.addObject("compareResult_js", String.join("\n", compareResult));
