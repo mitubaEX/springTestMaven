@@ -15,7 +15,8 @@ public class Comparator {
 		return list.stream()
 			.map(n -> n.split(",",8))
 			.filter(n -> n.length >= 8)
-			.map(n -> compare(createFile(n[1], n[7], kindOfBirthmark, n[3]), kindOfBirthmark, uploadFile, n[3], n[4], n[5], n[6]))
+			.map(n -> compare(createFile(n[1], n[7], kindOfBirthmark, n[3])
+					, kindOfBirthmark, uploadFile, n[3], n[4], n[5], n[6]))
 			.collect(Collectors.toList());
 	}
 	
@@ -29,16 +30,17 @@ public class Comparator {
 	// csvファイルとして作成しwriteFileを呼ぶ
 	public String createFile(String filename, String birthmark, String kindOfBirthmark, String jar){
 		try{
-			File file = new File(filename + ".csv");
+			String filenameCSV = filename + ".csv";
+			File file = new File(filenameCSV);
 			if(file.exists()){
-				new FileControler().deleteFile(filename + ".csv");
+				new FileControler().deleteFile(filenameCSV);
 				file.createNewFile();
 				writeFile(filename, birthmark, file, kindOfBirthmark, jar);
-				return filename + ".csv";
+				return filenameCSV;
 			}else{
 				file.createNewFile();
 				writeFile(filename, birthmark, file, kindOfBirthmark, jar);
-				return filename + ".csv";
+				return filenameCSV;
 			}
 		}catch (IOException e) {
 			// TODO: handle exception

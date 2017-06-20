@@ -110,6 +110,7 @@
 <form method="GET" action="/download">
     <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
     <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
+    <span th:text="*{dataBaseNumber}"></span>
     <div align="right">
         <button type="submit" class="btn btn-default">Download</button>
     </div>

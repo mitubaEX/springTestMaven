@@ -53,7 +53,7 @@ public class Searcher{
         			.map(n -> n.split(",",7))
                     .filter(i -> i.length >= 7  && !Objects.equals(i[1], "lev"))
                     .map(n -> myFileName + "," + n[0] + "," + n[1] + "," + n[2] + "," + n[3]
-                            + "," + n[4] + "," + n[5] + "," + n[6])
+                            + "," + n[4] + "," + n[5].replace("_", ".") + "," + n[6])
                     .collect(Collectors.toList());
         }catch(Exception e){
             System.out.println(e + ":solrj");

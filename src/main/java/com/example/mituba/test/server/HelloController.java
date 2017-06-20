@@ -94,6 +94,7 @@ public class HelloController {
         	mav.addObject("note_js", String.join("\n", searchResult));
         	mav.addObject("uploadFile_js", uploadFile);
         	mav.addObject("birthmark", birthmark);
+			mav.addObject("dataBaseNumber", "100");
         	mav.addObject("searchResult_js", String.join("\n", searchResult));
 			mav.addObject("compareResult", String.join("\n", compareResult));
 			mav.addObject("compareResult_js", String.join("\n", compareResult));

@@ -35,7 +35,7 @@ public class CompareResultCreater {
 	public List<String> getCompareResultOfString(){
 		return compareResult.stream()
 			.distinct()
-			.map(n -> readFileOfCompareResult(n.getFilePath(), "", "", "", ""))
+			.map(n -> readFileOfCompareResult(n.getFilePath(), n.getJar(), n.getGroupID(), n.getArtifactID(), n.getVersion()))
 			.collect(Collectors.toList());
 	}
 
