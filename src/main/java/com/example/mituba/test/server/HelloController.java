@@ -79,7 +79,9 @@ public class HelloController {
 
             String rows = "10";//デフォルトを10にしておく
 
+			long start = System.currentTimeMillis();
             List<String> searchResult = new SearchResultCreater(birthmark.replace("-", "")).getSearchResultOfString(file.getOriginalFilename(), rows);
+            long end = System.currentTimeMillis();
             List<SearchResult> searchResultList = new SearchResultCreater(birthmark.replace("-", "")).getSearchResultOfSearchResult(searchResult);
 //            List<String> classInformationList = new SearchResultCreater().getClassInformationList(searchResultList);
 //            classInformationList.stream()
@@ -89,12 +91,14 @@ public class HelloController {
         	mav.setViewName("searchResult");
         	mav.addObject("note", String.join("\n", searchResult));
         	mav.addObject("uploadFile", uploadFile);
+			mav.addObject("uploadFileName", uploadFile + "で検索中です");
         	mav.addObject("searchResult", String.join("\n", searchResult));
         	mav.addObject("searchResultList", searchResultList);
         	mav.addObject("note_js", String.join("\n", searchResult));
         	mav.addObject("uploadFile_js", uploadFile);
         	mav.addObject("birthmark", birthmark);
-			mav.addObject("dataBaseNumber", "100");
+			mav.addObject("searchTime", "検索時間：" + (end - start) + "ms");
+			mav.addObject("dataBaseNumber", "検索件数：" + searchResult.size());
         	mav.addObject("searchResult_js", String.join("\n", searchResult));
 			mav.addObject("compareResult", String.join("\n", compareResult));
 			mav.addObject("compareResult_js", String.join("\n", compareResult));

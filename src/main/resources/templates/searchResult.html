@@ -53,14 +53,14 @@
     <script>
         jQuery(function($){
             $("#searchResultTable").DataTable({
-                order: [ [ 3, "desc" ] ],
+                order: [ [ 4, "desc" ] ],
                 bStateSave:true,
                 searching: false
             });
         });
         jQuery(function($){
             $("#compareResultTable").DataTable({
-                order: [ [ 2, "desc" ] ],
+                order: [ [ 4, "desc" ] ],
                 bStateSave:true,
                 searching: false
             });
@@ -107,14 +107,11 @@
 
 
 <ul><h3>・検索結果</h3></ul>
-<form method="GET" action="/download">
-    <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
-    <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
-    <span th:text="*{dataBaseNumber}"></span>
-    <div align="right">
-        <button type="submit" class="btn btn-default">Download</button>
-    </div>
-</form>
+<!--<h3><span th:text="*{uploadFileName}"></span></h3>-->
+<div align="right">
+    <h3><span th:text="*{dataBaseNumber}"></span></h3>
+    <h3><span th:text="*{searchTime}"></span></h3>
+</div>
 <div class="container">
     <div class="table-responsive">
         <table id="searchResultTable" class="table table-striped">
@@ -143,6 +140,14 @@
 
 
 <textarea id="compareResult" name="compareResult" cols="40" rows="40" readonly="readonly" style="display:none;"><span th:text="*{compareResult}" th:remove="tag"></span></textarea>
+
+<form method="GET" action="/download">
+    <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
+    <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
+    <div align="right">
+        <button type="submit" class="btn btn-default">Download</button>
+    </div>
+</form>
 
 </body>
 </html>
