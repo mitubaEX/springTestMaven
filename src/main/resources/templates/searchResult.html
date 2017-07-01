@@ -141,7 +141,7 @@
 
 <textarea id="compareResult" name="compareResult" cols="40" rows="40" readonly="readonly" style="display:none;"><span th:text="*{compareResult}" th:remove="tag"></span></textarea>
 
-<form method="GET" action="/download">
+<form method="POST" action="/download">
     <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
     <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
     <div align="right">

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class FileControler {
@@ -12,12 +13,17 @@ public class FileControler {
 		File file = new File(filename);
 		file.delete();
 	}
+
+	public List<String> readFileList(String filename) throws FileNotFoundException, IOException{
+		BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
+		List<String> list = br.lines().collect(Collectors.toList());
+		br.close();
+		return list;
+	}
 	
 	public String readFile(String filename){
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
-			String str = String.join("\n", br.lines().collect(Collectors.toList())); 
-			br.close();
+			String str = String.join("\n", readFileList(filename));
 			return str;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

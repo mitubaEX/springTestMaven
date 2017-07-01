@@ -17,6 +17,7 @@ public class ComparatorClassInformation {
         this.groupID = groupID;
         this.artifactID = artifactID;
         this.version = version;
+        this.jar = jar;
     }
 
     public String getFilePath(){

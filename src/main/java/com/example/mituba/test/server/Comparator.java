@@ -55,6 +55,7 @@ public class Comparator {
             ScriptRunner runner = builder.build();
             String[] arg = { "./compare_input_csv_test.js", kindOfBirthmark, uploadFile, filename };
 			runner.runsScript(arg);
+			new FileControler().deleteFile(filename);
 			return new ComparatorClassInformation(uploadFile.replace("/", ".") + "-" + filename.replace("/", ".") + "-" + kindOfBirthmark + ".csv",
 					jar,groupID, artifactID, version);
 		} catch (IOException e) {

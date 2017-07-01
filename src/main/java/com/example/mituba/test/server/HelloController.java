@@ -6,29 +6,42 @@ import org.springframework.web.servlet.*;
 import org.springframework.web.multipart.*;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import org.springframework.http.*;
 
 @Controller
 public class HelloController {
 	@RequestMapping(value="/", method=RequestMethod.GET)
-	public ModelAndView index(ModelAndView mav){
+	public ModelAndView index(ModelAndView mav) throws IOException{
+		List<String> list = new FileControler().readFileList("./documentNumber.csv");
         mav.setViewName("search");
+        mav.addObject("documentNumber", list.get(list.size() - 1));
         return mav;
 	}
 
-    @RequestMapping(value = "/download", method = RequestMethod.GET)
+    @RequestMapping(value = "/download", method = RequestMethod.POST)
     public ResponseEntity<byte[]> download(@RequestParam("searchResult")String searchResultOfClient) throws IOException {
         HttpHeaders h = new HttpHeaders();
         h.add("Content-Type", "text/csv; charset=UTF-8");
         h.setContentDispositionFormData("filename", "searchResult.csv");
+
+        searchResultOfClient = String.join("\n",Arrays.stream(searchResultOfClient.split("\n"))
+				.map(n -> n.split(","))
+				.map(n -> n[0] + "," + n[1] + "," + n[3] + "," + n[4] + "," + n[5] + "," + n[6] + "," + n[2])
+				.collect(Collectors.toList()));
         return new ResponseEntity<>(searchResultOfClient.getBytes("UTF-8"), h, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/downloadCompareResult", method = RequestMethod.GET)
+    @RequestMapping(value = "/downloadCompareResult", method = RequestMethod.POST)
     public ResponseEntity<byte[]> downloadCompareResult(@RequestParam("compareResult")String compareResultOfClient) throws IOException {
         HttpHeaders h = new HttpHeaders();
         h.add("Content-Type", "text/csv; charset=UTF-8");
         h.setContentDispositionFormData("filename", "compareResult.csv");
+		compareResultOfClient = String.join("\n",Arrays.stream(compareResultOfClient.split("\n"))
+				.map(n -> n.split(","))
+				.map(n -> n[0] + "," + n[1] + "," + n[3] + "," + n[4] + "," + n[5] + "," + n[6].replace("\n","") + "," + n[2].replace("\n",""))
+				.collect(Collectors.toList()));
         return new ResponseEntity<>(compareResultOfClient.getBytes("UTF-8"), h, HttpStatus.OK);
     }
     
@@ -71,16 +84,20 @@ public class HelloController {
 	}
 
     @RequestMapping(value="/", method=RequestMethod.POST)
-    public ModelAndView send(@RequestParam("upload")MultipartFile file, @RequestParam("searchResult")String searchResultOfClient, @RequestParam("birthmark") String birthmark, ModelAndView mav){
+    public ModelAndView send(@RequestParam("upload")MultipartFile file,
+							 @RequestParam("searchResult")String searchResultOfClient,
+							 @RequestParam("birthmark") String birthmark,
+							 @RequestParam("threshold") String threshold,
+							 ModelAndView mav){
     	try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
 
             new Extractor().extractBirthmark(file, birthmark);
             String uploadFile = file.getOriginalFilename();
 
-            String rows = "10";//デフォルトを10にしておく
+            String rows = "100000000";//デフォルトを10にしておく
 
 			long start = System.currentTimeMillis();
-            List<String> searchResult = new SearchResultCreater(birthmark.replace("-", "")).getSearchResultOfString(file.getOriginalFilename(), rows);
+            List<String> searchResult = new SearchResultCreater(birthmark.replace("-", "")).getSearchResultOfString(file.getOriginalFilename(), rows, threshold);
             long end = System.currentTimeMillis();
             List<SearchResult> searchResultList = new SearchResultCreater(birthmark.replace("-", "")).getSearchResultOfSearchResult(searchResult);
 //            List<String> classInformationList = new SearchResultCreater().getClassInformationList(searchResultList);

@@ -84,6 +84,7 @@
 
 <h2>ファイルを投げて検索をする</h2>
 <p>classファイルかjarファイルを送信してください</p>
+<h3><span th:text="*{documentNumber}"></span></h3>
 <h4><span style="color:red" th:text="*{errorMessageOfSearch}"></span></h4>
 <form method="post" action="/" enctype="multipart/form-data">
 
@@ -100,6 +101,11 @@
     </select>
 <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
 <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
+    <select name="threshold" id="threshold">
+        <option value="0.75">0.75</option>
+        <option value="0.5">0.5</option>
+        <option value="0.25">0.25</option>
+    </select>
 </center>
 <center>
 <button type="submit" class="btn btn-default">検索</button>

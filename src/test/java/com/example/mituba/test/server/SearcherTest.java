@@ -14,11 +14,11 @@ import static org.junit.Assert.assertTrue;
 public class SearcherTest {
     @Test
     public void searchPerformTest(){
-        assertTrue(new Searcher("a", "b", "2000", "2-gram", "100").searchPerform().isEmpty());
+        assertTrue(new Searcher("a", "b", "2000", "2-gram", "100", "0.0").searchPerform().isEmpty());
     }
 
     @Test
     public void searchPerformNullTest(){
-        assertTrue(new Searcher(null, null,  null, null, null).searchPerform().isEmpty());
+        assertTrue(new Searcher(null, null,  null, null, null, null).searchPerform().isEmpty());
     }
 }

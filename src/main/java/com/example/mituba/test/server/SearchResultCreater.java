@@ -30,16 +30,16 @@ public class SearchResultCreater {
 				.collect(Collectors.toList());
 	}
 	
-    public List<Searcher> readFile(BufferedReader br, String rows){
+    public List<Searcher> readFile(BufferedReader br, String rows, String threshold){
     	return br.lines()
             .map(n -> n.split(",",4))
             .filter(n -> n.length >= 4)
-            .map(n -> new Searcher(n[0], n[3],"8982", birthmark, rows)) //ここを変更すると異なるバースマークの検索結果を取得可能
+            .map(n -> new Searcher(n[0], n[3],"8982", birthmark, rows, threshold)) //ここを変更すると異なるバースマークの検索結果を取得可能
             .collect(Collectors.toList());
     }
 	
-	public List<String> getSearchResultOfString(String fileName, String rows) throws FileNotFoundException{
-		return readFile(new BufferedReader(new FileReader(new File(fileName + ".csv"))), rows).stream()
+	public List<String> getSearchResultOfString(String fileName, String rows, String threshold) throws FileNotFoundException{
+		return readFile(new BufferedReader(new FileReader(new File(fileName + ".csv"))), rows, threshold).stream()
 			.flatMap(n -> n.searchPerform().stream())
 					.distinct()
 					.collect(Collectors.toList());

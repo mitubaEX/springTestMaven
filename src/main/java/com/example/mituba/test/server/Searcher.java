@@ -16,13 +16,15 @@ public class Searcher{
     private String kindOfBirthmark;
     private String rows;
     private String myFileName;
+    private String threshold;
 
-    public Searcher(String myFileName, String birthmark, String portNum, String kindOfBirthmark, String rows){
+    public Searcher(String myFileName, String birthmark, String portNum, String kindOfBirthmark, String rows, String threshold){
         this.birthmark = birthmark;
         this.portNum = portNum;
         this.kindOfBirthmark = kindOfBirthmark;
         this.rows = rows;
         this.myFileName = myFileName;
+        this.threshold = threshold;
     }
 
 
@@ -52,6 +54,7 @@ public class Searcher{
         	return new BufferedReader(new InputStreamReader(getCurlProcess().getInputStream())).lines()
         			.map(n -> n.split(",",7))
                     .filter(i -> i.length >= 7  && !Objects.equals(i[1], "lev"))
+                    .filter(i -> Double.parseDouble(i[1]) >= Double.parseDouble(threshold))
                     .map(n -> myFileName + "," + n[0] + "," + n[1] + "," + n[2] + "," + n[3]
                             + "," + n[4] + "," + n[5].replace("_", ".") + "," + n[6])
                     .collect(Collectors.toList());
