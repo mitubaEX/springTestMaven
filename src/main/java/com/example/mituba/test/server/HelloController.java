@@ -16,7 +16,7 @@ public class HelloController {
 	public ModelAndView index(ModelAndView mav) throws IOException{
 		List<String> list = new FileControler().readFileList("./documentNumber.csv");
         mav.setViewName("search");
-        mav.addObject("documentNumber", list.get(list.size() - 1));
+        mav.addObject("documentNumber", "データベースクラス数："+list.get(list.size() - 1) + "クラス");
         return mav;
 	}
 
@@ -115,7 +115,7 @@ public class HelloController {
         	mav.addObject("uploadFile_js", uploadFile);
         	mav.addObject("birthmark", birthmark);
 			mav.addObject("searchTime", "検索時間：" + (end - start) + "ms");
-			mav.addObject("dataBaseNumber", "検索件数：" + searchResult.size());
+			mav.addObject("dataBaseNumber", "検索件数：" + searchResult.size() + "件");
         	mav.addObject("searchResult_js", String.join("\n", searchResult));
 			mav.addObject("compareResult", String.join("\n", compareResult));
 			mav.addObject("compareResult_js", String.join("\n", compareResult));

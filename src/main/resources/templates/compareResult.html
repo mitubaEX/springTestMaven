@@ -93,13 +93,13 @@
 
 <textarea id="compareResult" name="compareResult" cols="40" rows="40" readonly="readonly" style="display:none;"><span th:text="*{compareResult}" th:remove="tag"></span></textarea>
 
-<ul><h3>・比較結果</h3></ul>
+<h2>比較結果</h2>
 <form method="POST" action="/downloadCompareResult">
     <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
     <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
     <input type="hidden" id="compareResult" name="compareResult" th:value="${compareResult}"/>
     <div align="right">
-        <button type="submit" class="btn btn-default">Download</button>
+        <button type="submit" class="btn btn-default">詳細比較結果をダウンロード</button>
     </div>
 </form>
 <div class="container">
