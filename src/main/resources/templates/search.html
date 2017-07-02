@@ -82,7 +82,7 @@
 </header>
 
 
-<h2>ファイルを投げて検索をする</h2>
+<h2>ファイルを使用して，検索をする</h2>
 <p>classファイルかjarファイルを送信してください</p>
 <h3><span th:text="*{documentNumber}"></span></h3>
 <h4><span style="color:red" th:text="*{errorMessageOfSearch}"></span></h4>
@@ -92,6 +92,7 @@
 <center>
 <input type="file" id="upload" name="upload" />
     <select name="birthmark" id="birthmark">
+        <option value="recomend">recomend</option>
         <option value="2-gram">2-gram</option>
         <option value="3-gram">3-gram</option>
         <option value="4-gram">4-gram</option>

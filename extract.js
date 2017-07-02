@@ -10,7 +10,7 @@ birthmarks = extractor.extract(source);
 // fs.createFile("test.txt");
 // fs.writeFile("test.txt", birthmarks);
 //
-fs.writer(argv[1] + ".csv", birthmarks)
+fs.writer(argv[1] + "-" + argv[2] + ".csv", birthmarks)
 
 // fs.print(birthmarks);
 //

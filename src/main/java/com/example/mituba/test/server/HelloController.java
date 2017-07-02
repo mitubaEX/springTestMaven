@@ -55,12 +55,36 @@ public class HelloController {
 	@RequestMapping(value="/compare", method=RequestMethod.POST)
 	public ModelAndView compare(@RequestParam("searchResult")String searchResultOfClient,@RequestParam("uploadFile")String uploadFileOfClient, @RequestParam("birthmark")String birthmark,  ModelAndView mav){
 		try{
-			CompareResultCreater creater = new CompareResultCreater(searchResultOfClient, birthmark, uploadFileOfClient + ".csv");
-			List<CompareResult> compareResultList  = creater.getCompareResultOfCompareResult();
-			List<String> compareResultStringList  = creater.getCompareResultOfString();
+		    String[] args = birthmark.split(",");
+		    List<CompareResult> compareResultList = new ArrayList<>();
+		    List<String> compareResultStringList = new ArrayList<>();
+		    if(args.length >= 2) {
+                CompareResultCreater creater = new CompareResultCreater(searchResultOfClient, args[0], uploadFileOfClient + "-" + args[0] + ".csv");
+                compareResultList = creater.getCompareResultOfCompareResult();
+                compareResultStringList = creater.getCompareResultOfString();
 //			List<SearchResult> searchResultList = new SearchResultCreater().getSearchResultOfSearchResult(searchResultOfClient);
 //			searchResultList.stream().forEach(n -> new FileControler().deleteFile(n.filename + ".csv"));
-			compareResultList.stream().forEach(n -> new FileControler().deleteFile(n.myFileName + ".class.csv-" +n.filename + ".csv-" + birthmark + ".csv"));
+                compareResultList.stream().forEach(n -> new FileControler().deleteFile(n.myFileName + ".class-" + args[0] +".csv-" + n.filename + ".csv-" + args[0] + ".csv"));
+
+
+                CompareResultCreater creater2 = new CompareResultCreater(searchResultOfClient, args[1], uploadFileOfClient + "-" + args[1] + ".csv");
+                List<CompareResult> compareResultListTmp = creater2.getCompareResultOfCompareResult();
+                List<String> compareResultStringListTmp = creater2.getCompareResultOfString();
+//			List<SearchResult> searchResultList = new SearchResultCreater().getSearchResultOfSearchResult(searchResultOfClient);
+//			searchResultList.stream().forEach(n -> new FileControler().deleteFile(n.filename + ".csv"));
+                compareResultListTmp.stream().forEach(n -> new FileControler().deleteFile(n.myFileName + ".class-" + args[1] +".csv-" + n.filename + ".csv-" + args[1] + ".csv"));
+
+                compareResultList.addAll(compareResultListTmp);
+                compareResultStringList.addAll(compareResultStringListTmp);
+
+            }else {
+                CompareResultCreater creater = new CompareResultCreater(searchResultOfClient, birthmark, uploadFileOfClient + "-" + birthmark + ".csv");
+                compareResultList = creater.getCompareResultOfCompareResult();
+                compareResultStringList = creater.getCompareResultOfString();
+//			List<SearchResult> searchResultList = new SearchResultCreater().getSearchResultOfSearchResult(searchResultOfClient);
+//			searchResultList.stream().forEach(n -> new FileControler().deleteFile(n.filename + ".csv"));
+                compareResultList.stream().forEach(n -> new FileControler().deleteFile(n.myFileName + ".class-"+ birthmark +".csv-" + n.filename + ".csv-" + birthmark + ".csv"));
+            }
 			
 			mav.setViewName("compareResult");
 			mav.addObject("searchResult", searchResultOfClient);
@@ -90,16 +114,44 @@ public class HelloController {
 							 @RequestParam("threshold") String threshold,
 							 ModelAndView mav){
     	try(BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))){
+			long start;
+			long end;
+			String rows = "100000000";//デフォルトを10にしておく
+			String uploadFile = file.getOriginalFilename();
+			List<String> searchResult = new ArrayList<>();
+			List<SearchResult> searchResultList = new ArrayList<>();
+    		if(Objects.equals(birthmark, "recomend")) {
+                birthmark = "2-gram";
+				new Extractor().extractBirthmark(file, birthmark);
 
-            new Extractor().extractBirthmark(file, birthmark);
-            String uploadFile = file.getOriginalFilename();
+				start = System.currentTimeMillis();
+				searchResult = new SearchResultCreater(birthmark).getSearchResultOfString(file.getOriginalFilename(), rows, threshold);
+//				end = System.currentTimeMillis();
+				searchResultList = new SearchResultCreater(birthmark).getSearchResultOfSearchResult(searchResult);
 
-            String rows = "100000000";//デフォルトを10にしておく
+                birthmark = "uc";
+                new Extractor().extractBirthmark(file, birthmark);
 
-			long start = System.currentTimeMillis();
-            List<String> searchResult = new SearchResultCreater(birthmark.replace("-", "")).getSearchResultOfString(file.getOriginalFilename(), rows, threshold);
-            long end = System.currentTimeMillis();
-            List<SearchResult> searchResultList = new SearchResultCreater(birthmark.replace("-", "")).getSearchResultOfSearchResult(searchResult);
+//                start = System.currentTimeMillis();
+                List<String> searchResultTmp2 = new SearchResultCreater(birthmark).getSearchResultOfString(file.getOriginalFilename(), rows, threshold);
+                end = System.currentTimeMillis();
+                searchResultTmp2.forEach(System.out::println);
+                List<SearchResult> searchResultListTmp2 = new SearchResultCreater(birthmark).getSearchResultOfSearchResult(searchResultTmp2);
+
+                searchResult.addAll(searchResultTmp2);
+                searchResultList.addAll(searchResultListTmp2);
+
+                birthmark = "2-gram,uc";
+
+			}else {
+				new Extractor().extractBirthmark(file, birthmark);
+
+				start = System.currentTimeMillis();
+				searchResult = new SearchResultCreater(birthmark).getSearchResultOfString(file.getOriginalFilename(), rows, threshold);
+                searchResult.forEach(System.out::println);
+				end = System.currentTimeMillis();
+				searchResultList = new SearchResultCreater(birthmark).getSearchResultOfSearchResult(searchResult);
+			}
 //            List<String> classInformationList = new SearchResultCreater().getClassInformationList(searchResultList);
 //            classInformationList.stream()
 //					.forEach(System.out::println);
@@ -122,6 +174,7 @@ public class HelloController {
             return mav;
 //        	mav.addObject("value", String.join("\n", searchResult));
         }catch(Exception e){
+    	    e.printStackTrace();
         	mav.setViewName("search");
         	mav.addObject("errorMessageOfSearch", "対応可能な形式はclassとjarです");
             return mav;

@@ -93,7 +93,7 @@
 
 <textarea id="compareResult" name="compareResult" cols="40" rows="40" readonly="readonly" style="display:none;"><span th:text="*{compareResult}" th:remove="tag"></span></textarea>
 
-<ul><h3>・比較結果</h3></ul>
+<ul><h3>・詳細検査結果</h3></ul>
 <form method="POST" action="/downloadCompareResult">
     <input type="hidden" id="searchResult" name="searchResult" th:value="${searchResult}"/>
     <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
@@ -107,11 +107,11 @@
         <table id="compareResultTable" class="table table-striped">
             <thead>
             <tr>
-                <th>ファイル名(検索使用)</th>
-                <th>ファイル名</th>
-                <th>クラス情報</th>
-                <th>jarファイル名</th>
-                <th>危険度</th>
+                <th>クエリ</th>
+                <th>検索結果</th>
+                <th>クラス情報(groupID,artifactID,version)</th>
+                <th>抽出jarファイル</th>
+                <th>類似度</th>
             </tr>
             </thead>
             <tbody>

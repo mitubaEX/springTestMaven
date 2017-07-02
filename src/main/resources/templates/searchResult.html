@@ -97,7 +97,7 @@
         <input type="hidden" id="uploadFile" name="uploadFile" th:value="${uploadFile}"/>
         <input type="hidden" id="birthmark" name="birthmark" th:value="${birthmark}"/>
         <div align="right">
-            <button type="submit" class="btn btn-default">詳細に危険度を測定</button>
+            <button type="submit" class="btn btn-default">詳細に類似度を測定</button>
         </div>
     </form>
 </header>
@@ -117,11 +117,11 @@
         <table id="searchResultTable" class="table table-striped">
             <thead>
             <tr>
-                <th>ファイル名(検索使用)</th>
-                <th>ファイル名</th>
-                <th>クラス情報</th>
-                <th>jarファイル名</th>
-                <th>危険度</th>
+                <th>クエリ</th>
+                <th>検索結果</th>
+                <th>クラス情報(groupID,artifactID,version)</th>
+                <th>抽出jarファイル</th>
+                <th>類似度</th>
             </tr>
             </thead>
             <tbody>
